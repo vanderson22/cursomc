@@ -2,13 +2,21 @@ package br.com.casa.dominio;
 
 import java.io.Serializable;
 
-public class Categoria  implements Serializable{
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
+public class Categoria implements Serializable {
 
 	/**
-	 *   Para nossa categoria ser convertidos em bytes - Arquivos, Rede e etc.
+	 * Para nossa categoria ser convertidos em bytes - Arquivos, Rede e etc.
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Integer id;
 	public String nome;
 
@@ -24,15 +32,13 @@ public class Categoria  implements Serializable{
 		this.nome = nome;
 	}
 
-	
-	
 	// Comparando as categorias apenas por ID
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		//result = prime * result + ((nome == null) ? 0 : nome.hashCode());
+		// result = prime * result + ((nome == null) ? 0 : nome.hashCode());
 		return result;
 	}
 

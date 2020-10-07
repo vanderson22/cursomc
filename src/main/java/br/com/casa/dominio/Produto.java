@@ -29,7 +29,7 @@ public class Produto implements Serializable {
 
 	// NÃO instanciar listar em construtores
 	// não adicionar listas como parâmetros
-	@JsonBackReference // Problema de referencia ciclica
+	@JsonBackReference // Problema de referencia ciclica pois um objeto produto contem categoria e vice versa.
 	@ManyToMany
 	@JoinTable(name = "produto_categoria",
 		joinColumns = @JoinColumn(name = "produto_id"), 

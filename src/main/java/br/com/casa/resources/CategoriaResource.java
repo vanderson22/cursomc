@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.casa.services.CategoriaService;
-import javassist.tools.rmi.ObjectNotFoundException;
 
 /**
  * Recurso de Categoria
@@ -23,8 +22,8 @@ public class CategoriaResource {
 	private CategoriaService catService;
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ResponseEntity<?> buscar(@PathVariable Integer id) throws ObjectNotFoundException {
-
+	public ResponseEntity<?> buscar(@PathVariable Integer id) {
+         // Handler para interceptar erros
 		return ResponseEntity.ok().body(catService.buscar(id));
 	}
 

@@ -9,10 +9,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import br.com.casa.dominio.Categoria;
 import br.com.casa.dominio.Cidade;
+import br.com.casa.dominio.Cliente;
+import br.com.casa.dominio.Endereco;
 import br.com.casa.dominio.Estado;
 import br.com.casa.dominio.Produto;
+import br.com.casa.dominio.enums.TipoCliente;
 import br.com.casa.repositories.CategoriaRepository;
 import br.com.casa.repositories.CidadeRepository;
+import br.com.casa.repositories.ClienteRepository;
+import br.com.casa.repositories.EnderecoRepository;
 import br.com.casa.repositories.EstadoRepository;
 import br.com.casa.repositories.ProdutoRepository;
 
@@ -28,6 +33,11 @@ public class CursomcApplication implements CommandLineRunner {
 	private EstadoRepository estadoRepo;
 	@Autowired
 	private CidadeRepository cidadeRepo;
+
+	@Autowired
+	private ClienteRepository cliRepo;
+	@Autowired
+	private EnderecoRepository endRepo;
 
 //	Executar o aplicativo do springboot
 	// Ja vem com um tom cat embedded
@@ -69,6 +79,23 @@ public class CursomcApplication implements CommandLineRunner {
 
 		estadoRepo.saveAll(Arrays.asList(e1, e2));
 		cidadeRepo.saveAll(Arrays.asList(cid1, cid2, cid3));
+
+		Cliente cli1 = new Cliente(null, "Maria silva", "maria@mail.com", "003.153.160-00", TipoCliente.PESSOAFISICA);
+		cli1.getTelefones().addAll(Arrays.asList("222-3333", "323-4544"));
+		Cliente cli2 = new Cliente(null, "Joana silva", "joana.silva@mail.com", "003.153.160-00",
+				TipoCliente.PESSOAFISICA);
+
+		cli2.getTelefones().addAll(Arrays.asList("222-3333", "323-4544"));
+
+		Endereco end1 = new Endereco(null, "Rua Flores", "3001", "apto 303", "Jardim", "38229834", cli1, cid1);
+
+		Endereco end2 = new Endereco(null, "Aveninda Mattos", "31", "Casa Verde", "Jargim", "38777012", cli1, cid2);
+
+		cli1.getEnderecos().addAll(Arrays.asList(end1, end2));
+
+		// SALVAR SEMPRE OS INDEPENDENTES PRIMEIRO EX: CLIENTE
+		cliRepo.saveAll(Arrays.asList(cli1, cli2));
+		endRepo.saveAll(Arrays.asList(end1, end2));
 
 		System.out.println("Finalizou a instanciação");
 //		repo.save(c1);

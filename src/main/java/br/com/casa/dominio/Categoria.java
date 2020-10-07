@@ -1,11 +1,14 @@
 package br.com.casa.dominio;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 @Entity
 public class Categoria implements Serializable {
@@ -17,8 +20,12 @@ public class Categoria implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public Integer id;
-	public String nome;
+	private Integer id;
+	private String nome;
+
+	// muitos para muitos
+	@ManyToMany(mappedBy = "categorias") // é em cima da variável no outro lado
+	private List<Produto> produtos = new ArrayList<>();
 
 	// Para associações , sempre inicie as listas !!!
 
@@ -83,6 +90,14 @@ public class Categoria implements Serializable {
 	@Override
 	public String toString() {
 		return "Categoria [id=" + id + ", nome=" + nome + "]";
+	}
+
+	public List<Produto> getProdutos() {
+		return produtos;
+	}
+
+	public void setProdutos(List<Produto> produtos) {
+		this.produtos = produtos;
 	}
 
 }

@@ -21,7 +21,7 @@ public class CategoriaService {
 
 		return 
 				optional.orElseThrow(
-				() -> new ObjectNotFoundException("Objeto não encontrado id :[" + id + "]")
+				() -> new ObjectNotFoundException("Categoria não encontrada  - identificador :[" + id + "]")
 				);
 
 	}

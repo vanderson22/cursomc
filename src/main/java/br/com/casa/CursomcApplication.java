@@ -8,8 +8,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import br.com.casa.dominio.Categoria;
+import br.com.casa.dominio.Cidade;
+import br.com.casa.dominio.Estado;
 import br.com.casa.dominio.Produto;
 import br.com.casa.repositories.CategoriaRepository;
+import br.com.casa.repositories.CidadeRepository;
+import br.com.casa.repositories.EstadoRepository;
 import br.com.casa.repositories.ProdutoRepository;
 
 @SpringBootApplication
@@ -20,6 +24,10 @@ public class CursomcApplication implements CommandLineRunner {
 
 	@Autowired
 	private ProdutoRepository pRepo;
+	@Autowired
+	private EstadoRepository estadoRepo;
+	@Autowired
+	private CidadeRepository cidadeRepo;
 
 //	Executar o aplicativo do springboot
 	// Ja vem com um tom cat embedded
@@ -48,6 +56,19 @@ public class CursomcApplication implements CommandLineRunner {
 
 		repo.saveAll(Arrays.asList(c1, c2));
 		pRepo.saveAll(Arrays.asList(p1, p2, p3));
+
+		Estado e1 = new Estado(null, "Minas Gerais");
+		Estado e2 = new Estado(null, "São Paulo");
+
+		Cidade cid1 = new Cidade(null, "Uberlândia", e1);
+		Cidade cid2 = new Cidade(null, "Santos", e2);
+		Cidade cid3 = new Cidade(null, "Campinas", e2);
+
+		e1.getCidades().addAll(Arrays.asList(cid1));
+		e2.getCidades().addAll(Arrays.asList(cid2, cid3));
+
+		estadoRepo.saveAll(Arrays.asList(e1, e2));
+		cidadeRepo.saveAll(Arrays.asList(cid1, cid2, cid3));
 
 		System.out.println("Finalizou a instanciação");
 //		repo.save(c1);

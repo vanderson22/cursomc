@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class Produto implements Serializable {
 
@@ -27,6 +29,7 @@ public class Produto implements Serializable {
 
 	// NÃO instanciar listar em construtores
 	// não adicionar listas como parâmetros
+	@JsonBackReference // Problema de referencia ciclica
 	@ManyToMany
 	@JoinTable(name = "produto_categoria",
 		joinColumns = @JoinColumn(name = "produto_id"), 

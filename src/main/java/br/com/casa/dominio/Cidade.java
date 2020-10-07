@@ -7,6 +7,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 public class Cidade {
 
@@ -15,6 +17,7 @@ public class Cidade {
 	private Integer id;
 	private String nome;
 
+	@JsonManagedReference
 	@ManyToOne
 	@JoinColumn(name = "estado_id")
 	private Estado estado;

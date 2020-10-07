@@ -14,6 +14,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import br.com.casa.dominio.enums.TipoCliente;
 
 @Entity
@@ -33,6 +35,10 @@ public class Cliente implements Serializable {
 //	private TipoCliente tipo ->>> macete; VAMOS ARMAZENAR UM INTEIRO E expor uma enum
 	private Integer tipo;
 
+//	 pulo do gato
+//	O cliente pode serializar endereço porém o endereço não pode fazer o mesmo
+//	Referencia ciclica //	@JsonManagedReference ... endereço é filho de cliente, embora endereço também tenha cliente
+	@JsonManagedReference
 	@OneToMany(mappedBy = "cliente")
 	private List<Endereco> enderecos = new ArrayList<>();
 	// para garantir não existir repetição

@@ -2,7 +2,7 @@ package br.com.casa.dominio.enums;
 
 public enum EstadoPagamento {
 
-	PENDENTE(1, "Pendente"), QUITADO(2, "Quitado"), CANCELADOR(3, "Cancelado");
+	PENDENTE(1, "Pendente"), QUITADO(2, "Quitado"), CANCELADO(3, "Cancelado");
 
 	private Integer codigo;
 	private String estado;
@@ -16,7 +16,7 @@ public enum EstadoPagamento {
 		return codigo;
 	}
 
-	public EstadoPagamento toEnum() {
+	public static EstadoPagamento toEnum(Integer codigo) {
 
 		if (codigo == null)
 			return null;

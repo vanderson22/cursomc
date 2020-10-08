@@ -1,6 +1,8 @@
 package br.com.casa;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -12,13 +14,20 @@ import br.com.casa.dominio.Cidade;
 import br.com.casa.dominio.Cliente;
 import br.com.casa.dominio.Endereco;
 import br.com.casa.dominio.Estado;
+import br.com.casa.dominio.Pagamento;
+import br.com.casa.dominio.PagamentoBoleto;
+import br.com.casa.dominio.PagamentoCartao;
+import br.com.casa.dominio.Pedido;
 import br.com.casa.dominio.Produto;
+import br.com.casa.dominio.enums.EstadoPagamento;
 import br.com.casa.dominio.enums.TipoCliente;
 import br.com.casa.repositories.CategoriaRepository;
 import br.com.casa.repositories.CidadeRepository;
 import br.com.casa.repositories.ClienteRepository;
 import br.com.casa.repositories.EnderecoRepository;
 import br.com.casa.repositories.EstadoRepository;
+import br.com.casa.repositories.PagamentoRepository;
+import br.com.casa.repositories.PedidoRepository;
 import br.com.casa.repositories.ProdutoRepository;
 
 @SpringBootApplication
@@ -38,6 +47,12 @@ public class CursomcApplication implements CommandLineRunner {
 	private ClienteRepository cliRepo;
 	@Autowired
 	private EnderecoRepository endRepo;
+
+	@Autowired
+	private PedidoRepository pedidoRepo;
+
+	@Autowired
+	private PagamentoRepository pagamentoRepo;
 
 //	Executar o aplicativo do springboot
 	// Ja vem com um tom cat embedded
@@ -96,6 +111,23 @@ public class CursomcApplication implements CommandLineRunner {
 		// SALVAR SEMPRE OS INDEPENDENTES PRIMEIRO EX: CLIENTE
 		cliRepo.saveAll(Arrays.asList(cli1, cli2));
 		endRepo.saveAll(Arrays.asList(end1, end2));
+
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+
+		Pedido ped1 = new Pedido(null, sdf.parse("10/02/2020 10:30"), cli1, end1);
+		Pedido ped2 = new Pedido(null, sdf.parse("13/03/2020 21:10"), cli1, end2);
+
+		Pagamento pg1 = new PagamentoBoleto(null, EstadoPagamento.QUITADO, ped1, sdf.parse("13/03/2020 21:10"),
+				new Date());
+		ped1.setPagamento(pg1);
+
+		Pagamento pg2 = new PagamentoCartao(null, EstadoPagamento.PENDENTE, ped2, null);
+		ped2.setPagamento(pg2);
+
+		cli1.getPedidos().addAll(Arrays.asList(ped1, ped2));
+
+		pedidoRepo.saveAll(Arrays.asList(ped1, ped2));
+		pagamentoRepo.saveAll(Arrays.asList(pg1, pg2));
 
 		System.out.println("Finalizou a instanciação");
 //		repo.save(c1);

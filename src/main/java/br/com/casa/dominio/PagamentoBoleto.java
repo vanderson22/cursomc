@@ -2,7 +2,11 @@ package br.com.casa.dominio;
 
 import java.util.Date;
 
+import javax.persistence.Entity;
+
 import br.com.casa.dominio.enums.EstadoPagamento;
+
+@Entity
 
 public class PagamentoBoleto extends Pagamento {
 

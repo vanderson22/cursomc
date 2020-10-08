@@ -1,7 +1,10 @@
 package br.com.casa.dominio;
 
+import javax.persistence.Entity;
+
 import br.com.casa.dominio.enums.EstadoPagamento;
 
+@Entity
 public class PagamentoCartao extends Pagamento {
 
 	/**
@@ -31,7 +34,5 @@ public class PagamentoCartao extends Pagamento {
 	public String toString() {
 		return "PagamentoCartao [parcelas=" + parcelas + "]";
 	}
-	
-	
 
 }

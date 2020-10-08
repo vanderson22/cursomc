@@ -3,9 +3,9 @@ package br.com.casa.dominio;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
@@ -13,7 +13,8 @@ import javax.persistence.OneToOne;
 import br.com.casa.dominio.enums.EstadoPagamento;
 
 @Entity
-public class Pagamento implements Serializable {
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class Pagamento implements Serializable {
 
 	/**
 	 * 
@@ -23,11 +24,12 @@ public class Pagamento implements Serializable {
 	@Id
 //	@GeneratedValue(strategy = GenerationType.IDENTITY) O pagamento precisa ser o mesmo do pedido
 	private Integer id;
-	private EstadoPagamento estado;
+//	private EstadoPagamento estado;
+	private Integer estado;
 
 	@OneToOne
 	@JoinColumn(name = "pedido_id")
-	@MapsId // Para garantir que o pagamento e pedido tenham o Mesmo id.
+	@MapsId // a chave primária do pedido é a chave estrangeira de pagamento.
 	private Pedido pedido;
 
 	public Pagamento() {
@@ -40,12 +42,13 @@ public class Pagamento implements Serializable {
 		this.setPedido(pedido);
 	}
 
+	// Seta um c
 	public EstadoPagamento getEstado() {
-		return estado;
+		return EstadoPagamento.toEnum(estado);
 	}
 
 	public void setEstado(EstadoPagamento estado) {
-		this.estado = estado;
+		this.estado = estado.getCodigo();
 	}
 
 	public Pedido getPedido() {

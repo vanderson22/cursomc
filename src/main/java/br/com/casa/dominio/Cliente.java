@@ -15,7 +15,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import br.com.casa.dominio.enums.TipoCliente;
 
@@ -39,7 +38,7 @@ public class Cliente implements Serializable {
 //	 pulo do gato
 //	O cliente pode serializar endereço porém o endereço não pode fazer o mesmo
 //	Referencia ciclica //	@JsonManagedReference ... endereço é filho de cliente, embora endereço também tenha cliente
-	@JsonManagedReference
+//	@JsonManagedReference
 	@OneToMany(mappedBy = "cliente")
 	private List<Endereco> enderecos = new ArrayList<>();
 	// para garantir não existir repetiçãoO

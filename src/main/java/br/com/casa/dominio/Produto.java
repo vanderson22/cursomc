@@ -16,6 +16,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Produto implements Serializable {
@@ -30,11 +31,11 @@ public class Produto implements Serializable {
 	// NÃO instanciar listar em construtores
 	// não adicionar listas como parâmetros
 	@JsonBackReference // Problema de referencia ciclica pois um objeto produto contem categoria e vice
-						// versa.
 	@ManyToMany
 	@JoinTable(name = "produto_categoria", joinColumns = @JoinColumn(name = "produto_id"), inverseJoinColumns = @JoinColumn(name = "categoria_id"))
 	private List<Categoria> categorias = new ArrayList<>();
 
+	@JsonIgnore // aqui eu ignoro pois puxo por pedido
 	@OneToMany(mappedBy = "pk.produto")
 	private Set<ItemPedido> itens = new HashSet<>();
 
@@ -53,6 +54,7 @@ public class Produto implements Serializable {
 	// Produto conhece sua lista de pedidos, porém no diagrama ele se relaciona
 	// através da tabela itemPEdido
 
+	@JsonIgnore
 	public List<Pedido> getPedidos() {
 
 		List<Pedido> pedidos = new ArrayList<>();

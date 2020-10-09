@@ -6,6 +6,8 @@ import java.io.Serializable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class ItemPedido implements Serializable {
 
@@ -15,6 +17,7 @@ public class ItemPedido implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	// Chave composta
+	@JsonIgnore
 	@EmbeddedId
 	private ProdutoPedidoPK pk = new ProdutoPedidoPK();
 
@@ -34,11 +37,15 @@ public class ItemPedido implements Serializable {
 		this.preco = preco;
 	}
 
+	// PULO DO GATO, observe os dois métodos acessando pedido e produto, gerando uma
+	// referencia circular.
+	@JsonIgnore
 	public Pedido getPedido() {
 
 		return pk.getPedido();
 	}
 
+//	@JsonIgnore
 	public Produto getProduto() {
 
 		return pk.getProduto();

@@ -19,10 +19,13 @@ public class CategoriaService {
 
 		Optional<Categoria> optional = repo.findById(id);
 
-		return 
-				optional.orElseThrow(
-				() -> new ObjectNotFoundException("Categoria não encontrada  - identificador :[" + id + "]")
-				);
+		return optional.orElseThrow(
+				() -> new ObjectNotFoundException("Categoria não encontrada  - identificador :[" + id + "]"));
+
+	}
+
+	public Categoria criar(Categoria categoria) {
+		return repo.save(categoria);
 
 	}
 

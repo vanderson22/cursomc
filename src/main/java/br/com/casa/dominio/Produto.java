@@ -2,7 +2,9 @@ package br.com.casa.dominio;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,16 +13,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 public class Produto implements Serializable {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
@@ -29,12 +29,14 @@ public class Produto implements Serializable {
 
 	// NÃO instanciar listar em construtores
 	// não adicionar listas como parâmetros
-	@JsonBackReference // Problema de referencia ciclica pois um objeto produto contem categoria e vice versa.
+	@JsonBackReference // Problema de referencia ciclica pois um objeto produto contem categoria e vice
+						// versa.
 	@ManyToMany
-	@JoinTable(name = "produto_categoria",
-		joinColumns = @JoinColumn(name = "produto_id"), 
-		inverseJoinColumns = @JoinColumn(name = "categoria_id"))
+	@JoinTable(name = "produto_categoria", joinColumns = @JoinColumn(name = "produto_id"), inverseJoinColumns = @JoinColumn(name = "categoria_id"))
 	private List<Categoria> categorias = new ArrayList<>();
+
+	@OneToMany(mappedBy = "pk.produto")
+	private Set<ItemPedido> itens = new HashSet<>();
 
 	public Produto() {
 
@@ -45,6 +47,20 @@ public class Produto implements Serializable {
 		this.setId(id);
 		this.setNome(nome);
 		this.setPreço(preço);
+	}
+
+	// Pulo do gato
+	// Produto conhece sua lista de pedidos, porém no diagrama ele se relaciona
+	// através da tabela itemPEdido
+
+	public List<Pedido> getPedidos() {
+
+		List<Pedido> pedidos = new ArrayList<>();
+		// iterei nos itens de pedido para cada item adiciona um pedido na lista de
+		// pedidos.
+		itens.forEach(item -> pedidos.add(item.getPedido()));
+
+		return pedidos;
 	}
 
 	public List<Categoria> getCategorias() {
@@ -107,6 +123,14 @@ public class Produto implements Serializable {
 	@Override
 	public String toString() {
 		return "Produto [id=" + id + ", nome=" + nome + ", preço=" + preço + "]";
+	}
+
+	public Set<ItemPedido> getItens() {
+		return itens;
+	}
+
+	public void setItens(Set<ItemPedido> itens) {
+		this.itens = itens;
 	}
 
 }

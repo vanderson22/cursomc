@@ -14,6 +14,7 @@ import br.com.casa.dominio.Cidade;
 import br.com.casa.dominio.Cliente;
 import br.com.casa.dominio.Endereco;
 import br.com.casa.dominio.Estado;
+import br.com.casa.dominio.ItemPedido;
 import br.com.casa.dominio.Pagamento;
 import br.com.casa.dominio.PagamentoBoleto;
 import br.com.casa.dominio.PagamentoCartao;
@@ -26,6 +27,7 @@ import br.com.casa.repositories.CidadeRepository;
 import br.com.casa.repositories.ClienteRepository;
 import br.com.casa.repositories.EnderecoRepository;
 import br.com.casa.repositories.EstadoRepository;
+import br.com.casa.repositories.ItemRepository;
 import br.com.casa.repositories.PagamentoRepository;
 import br.com.casa.repositories.PedidoRepository;
 import br.com.casa.repositories.ProdutoRepository;
@@ -53,6 +55,9 @@ public class CursomcApplication implements CommandLineRunner {
 
 	@Autowired
 	private PagamentoRepository pagamentoRepo;
+
+	@Autowired
+	private ItemRepository itemRepo;
 
 //	Executar o aplicativo do springboot
 	// Ja vem com um tom cat embedded
@@ -104,7 +109,7 @@ public class CursomcApplication implements CommandLineRunner {
 
 		Endereco end1 = new Endereco(null, "Rua Flores", "3001", "apto 303", "Jardim", "38229834", cli1, cid1);
 
-		Endereco end2 = new Endereco(null, "Aveninda Mattos", "31", "Casa Verde", "Jargim", "38777012", cli1, cid2);
+		Endereco end2 = new Endereco(null, "Aveninda Mattos", "31", "Casa Verde", "Jardim", "38777012", cli1, cid2);
 
 		cli1.getEnderecos().addAll(Arrays.asList(end1, end2));
 
@@ -129,6 +134,17 @@ public class CursomcApplication implements CommandLineRunner {
 		pedidoRepo.saveAll(Arrays.asList(ped1, ped2));
 		pagamentoRepo.saveAll(Arrays.asList(pg1, pg2));
 
+		ItemPedido ip1 = new ItemPedido(ped1, p1, 0.00, 1, 2999.99);
+		ItemPedido ip2 = new ItemPedido(ped1, p3, 0.00, 1, 200.99);
+		ItemPedido ip3 = new ItemPedido(ped2, p2, 0.00, 1, 1500.99);
+
+		// associar pedido com item
+		p1.getItens().addAll(Arrays.asList(ip1));
+		p2.getItens().addAll(Arrays.asList(ip3));
+		p3.getItens().addAll(Arrays.asList(ip2));
+		
+		itemRepo.saveAll(Arrays.asList(ip1, ip2, ip3));
+		
 		System.out.println("Finalizou a instanciação");
 //		repo.save(c1);
 //		repo.save(c2);

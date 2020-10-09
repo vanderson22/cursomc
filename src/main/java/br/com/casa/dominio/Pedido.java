@@ -1,7 +1,11 @@
 package br.com.casa.dominio;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -10,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 @Entity
@@ -24,10 +29,9 @@ public class Pedido implements Serializable {
 	private Integer id;
 	private Date instante;
 
-	@OneToOne(cascade = CascadeType.ALL , mappedBy = "pedido")
+	@OneToOne(cascade = CascadeType.ALL, mappedBy = "pedido")
 	private Pagamento pagamento;
 
-	
 	@ManyToOne
 	@JoinColumn(name = "cliente_id")
 	private Cliente cliente;
@@ -36,10 +40,14 @@ public class Pedido implements Serializable {
 	@JoinColumn(name = "endereco_entrega_id")
 	private Endereco enderecoEntrega;
 
+	// ATENÇÃO NESTA PARTE
+	@OneToMany(mappedBy = "pk.pedido")
+	private Set<ItemPedido> itens = new HashSet<>();
+
 	public Pedido() {
 	}
 
-	public Pedido(Integer id, Date instante,  Cliente cliente, Endereco enderecoEntrega) {
+	public Pedido(Integer id, Date instante, Cliente cliente, Endereco enderecoEntrega) {
 		super();
 		this.setId(id);
 		this.instante = instante;
@@ -111,6 +119,14 @@ public class Pedido implements Serializable {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	public Set<ItemPedido> getItens() {
+		return itens;
+	}
+
+	public void setItens(Set<ItemPedido> itens) {
+		this.itens = itens;
 	}
 
 }

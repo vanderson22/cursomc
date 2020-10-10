@@ -29,4 +29,9 @@ public class CategoriaService {
 
 	}
 
+	public Categoria update(Categoria categoria) {
+
+		return repo.save(buscar(categoria.getId()));
+	}
+
 }

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import br.com.casa.exceptions.DataIntegridadeException;
 import br.com.casa.exceptions.ObjectNotFoundException;
 
 /**** INTERCEPTA ERROS ***/
@@ -26,13 +27,13 @@ public class ResourceExceptionHandler {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(standardError);
 	}
 	
-	@ExceptionHandler(Exception.class)
-	public ResponseEntity<StandardError> objectNotFound(Exception e, HttpServletRequest request) {
+	@ExceptionHandler(DataIntegridadeException.class)
+	public ResponseEntity<StandardError> integridadeDados(DataIntegridadeException e, HttpServletRequest request) {
 
-		StandardError standardError = new StandardError(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(),
+		StandardError standardError = new StandardError(HttpStatus.BAD_REQUEST.value(), e.getMessage(),
 				System.currentTimeMillis());
 
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(standardError);
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(standardError);
 	}
 
 }

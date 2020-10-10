@@ -2,6 +2,8 @@ package br.com.casa.resources;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,12 +15,18 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.casa.dominio.Categoria;
+import br.com.casa.dominio.DTO.CategoriaDTO;
 import br.com.casa.services.CategoriaService;
 
 /**
- * Recurso de Categoria
+ * Recurso  -  Categoria
+ *  
+ * [Controlador Rest ]
  * 
- * Camada de controler rest
+ * 
+ * Os métodos não possuem try Catch, o tratamento é feito por um handler que
+ * captura as exceções que seriam devolvidas ao cliente e formata da melhor
+ * maneira possível.
  ***/
 
 @RestController
@@ -27,8 +35,20 @@ public class CategoriaResource {
 	@Autowired
 	private CategoriaService catService;
 
+	@RequestMapping(method = RequestMethod.GET)
+	public ResponseEntity<List<CategoriaDTO>> buscarTodos() {
+
+		// UTILIZANDO O PADRÃO DTO - motivo ? não retornar todos os dados da categoria Exemplo Produtos
+		List<Categoria> buscarTodos = catService.buscarTodos();
+		List<CategoriaDTO> listaDTO = new ArrayList<CategoriaDTO>();
+		
+		buscarTodos.forEach(cat -> listaDTO.add(new CategoriaDTO(cat)));
+		  
+		return ResponseEntity.ok().body(listaDTO);
+	}
+
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ResponseEntity<?> buscar(@PathVariable Integer id) {
+	public ResponseEntity<Categoria> buscar(@PathVariable Integer id) {
 		// Handler para interceptar erros
 		return ResponseEntity.ok().body(catService.buscar(id));
 	}

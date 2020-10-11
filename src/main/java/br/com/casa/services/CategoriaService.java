@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import br.com.casa.dominio.Categoria;
+import br.com.casa.dominio.DTO.CategoriaDTO;
 import br.com.casa.exceptions.DataIntegridadeException;
 import br.com.casa.exceptions.ObjectNotFoundException;
 import br.com.casa.repositories.CategoriaRepository;
@@ -53,19 +54,23 @@ public class CategoriaService {
 
 	/**
 	 * 
-	 *  Busca paginada  
+	 * Busca paginada
 	 */
-	public Page<Categoria> buscaPaginada(Integer pagina, Integer quantidadeLinha , String orderBy , String direction) {
+	public Page<Categoria> buscaPaginada(Integer pagina, Integer quantidadeLinha, String orderBy, String direction) {
 
 		PageRequest pr = PageRequest.of(pagina, quantidadeLinha, Direction.valueOf(direction), orderBy);
-		
-		
+
 		return repo.findAll(pr);
 	}
 
 	public List<Categoria> buscarTodos() {
 
 		return repo.findAll();
+	}
+
+	public Categoria fromDTO(CategoriaDTO dto) {
+
+		return new Categoria(dto.getId(), dto.getNome());
 	}
 
 }

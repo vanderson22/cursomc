@@ -4,7 +4,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,28 +38,28 @@ import br.com.casa.services.CategoriaService;
 public class CategoriaResource {
 	@Autowired
 	private CategoriaService catService;
- 
-	
+
 	/**
 	 * 
-	 *  @return Lista de objeto Categoria DTO.
-	 * */
+	 * @return Lista de objeto Categoria DTO.
+	 */
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<List<CategoriaDTO>> buscarTodos() {
 		List<Categoria> buscarTodos = catService.buscarTodos();
 		List<CategoriaDTO> listaDTO = new ArrayList<CategoriaDTO>();
 
 		buscarTodos.forEach(cat -> listaDTO.add(new CategoriaDTO(cat)));
-   
+
 		return ResponseEntity.ok().body(listaDTO);
 	}
-   /**
-    *  Busca paginada
-    *  Pode informar nos request param se é opcional ou não
-    *  Porém já está com valores default
-    *   @return Objeto paginado.
-    *   
-    * ***/
+
+	/**
+	 * Busca paginada Pode informar nos request param se é opcional ou não Porém já
+	 * está com valores default
+	 * 
+	 * @return Objeto paginado.
+	 * 
+	 ***/
 	@RequestMapping(value = "/page", method = RequestMethod.GET)
 	public ResponseEntity<Page<CategoriaDTO>> buscaPaginada(
 			@RequestParam(value = "pagina", defaultValue = "0") Integer pagina,
@@ -68,7 +69,7 @@ public class CategoriaResource {
 
 		Page<Categoria> page = catService.buscaPaginada(pagina, quantidadeLinha, orderBy, direction);
 		Page<CategoriaDTO> listaDTO = page.map(obj -> new CategoriaDTO(obj));
-     
+
 		return ResponseEntity.ok().body(listaDTO);
 	}
 
@@ -79,8 +80,10 @@ public class CategoriaResource {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Void> criar(@RequestBody Categoria categoria) throws URISyntaxException {
-		Categoria catCriada = catService.criar(categoria);
+	public ResponseEntity<Void> criar(@Valid @RequestBody CategoriaDTO categoria) throws URISyntaxException {
+		// Para validar
+
+		Categoria catCriada = catService.criar(catService.fromDTO(categoria));
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(catCriada.getId())
 				.toUri();
 		// return ResponseEntity.ok().body(catService.buscar(categoria));
@@ -88,11 +91,11 @@ public class CategoriaResource {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<Void> atualizar(@PathVariable Integer id, @RequestBody Categoria categoria)
+	public ResponseEntity<Void> atualizar(@PathVariable Integer id, @Valid @RequestBody CategoriaDTO categoriaDTO)
 			throws URISyntaxException {
 
-		categoria.setId(id);
-		catService.update(categoria);
+		categoriaDTO.setId(id);
+		catService.update(catService.fromDTO(categoriaDTO));
 
 		return ResponseEntity.noContent().build();
 	}

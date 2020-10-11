@@ -1,4 +1,4 @@
-package br.com.casa.resources;
+package br.com.casa.exceptions;
 
 /***
  * Apenas para modelar um retorno HTTP

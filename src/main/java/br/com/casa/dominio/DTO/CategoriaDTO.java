@@ -15,7 +15,7 @@ public class CategoriaDTO implements Serializable {
 	private Integer id;
 
 	@NotEmpty
-	@Length(min = 5, max = 100, message = "Não foi possível validar o nome pois não atender a quantidade de caracteres")
+	@Length(min = 5, max = 100, message = "Não foi possível validar o nome, pois não atende a quantidade de caracteres")
 	private String nome;
 
 	public CategoriaDTO() {

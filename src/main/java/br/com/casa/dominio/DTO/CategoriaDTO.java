@@ -8,6 +8,8 @@ import org.hibernate.validator.constraints.Length;
 
 import br.com.casa.dominio.Categoria;
 
+
+// Atenção a validação não ocorre nas classes de dominio e sim nos DTO.
 public class CategoriaDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;

@@ -40,9 +40,9 @@ public abstract class Pagamento implements Serializable {
 
 	public Pagamento(Integer id, EstadoPagamento estado, Pedido pedido) {
 		super();
-		this.setId(id);
-		this.setEstado(estado);
-		this.setPedido(pedido);
+		this.id = id;
+		this.estado = (estado == null) ? null : estado.getCodigo();
+		this.pedido = pedido;
 	}
 
 	// Seta um c

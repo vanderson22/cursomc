@@ -65,6 +65,8 @@ public class ClienteResource {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+	// Atenção neste ponto! o @Valid ocorre antes de setar o id, então como validar o e-mail ?
+	  // Validador customizado capturando o httpRequest  - ID - Cliente Update Validator
 	public ResponseEntity<Void> atualizar(@PathVariable Integer id, @Valid @RequestBody ClienteDTO clienteDTO) {
 		clienteDTO.setId(id);
 		catService.update(catService.fromDTO(clienteDTO));

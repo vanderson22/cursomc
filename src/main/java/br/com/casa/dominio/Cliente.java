@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -39,7 +40,7 @@ public class Cliente implements Serializable {
 //	O cliente pode serializar endereço porém o endereço não pode fazer o mesmo
 //	Referencia ciclica //	@JsonManagedReference ... endereço é filho de cliente, embora endereço também tenha cliente
 //	@JsonManagedReference
-	@OneToMany(mappedBy = "cliente")
+	@OneToMany(mappedBy = "cliente" , cascade = CascadeType.ALL) // quando remover cliente remover endereço
 	private List<Endereco> enderecos = new ArrayList<>();
 	// para garantir não existir repetiçãoO
 

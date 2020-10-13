@@ -59,7 +59,7 @@ public class ClienteService {
 			repo.delete(buscar(id));
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegridadeException(
-					"Não é possível excluir o cliente, pois ele possui produtos vinculados - Cliente id [" + id + "]");
+					"Não é possível excluir o cliente, pois ele possui entidades vinculadas - Cliente id [" + id + "]");
 		}
 
 	}

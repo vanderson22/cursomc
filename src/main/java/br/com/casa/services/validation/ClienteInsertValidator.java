@@ -6,10 +6,14 @@ import java.util.List;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import br.com.casa.dominio.Cliente;
 import br.com.casa.dominio.ClienteNewDTO;
 import br.com.casa.dominio.annotations.validation.ClienteInsert;
 import br.com.casa.dominio.enums.TipoCliente;
 import br.com.casa.exceptions.FieldMessage;
+import br.com.casa.repositories.ClienteRepository;
 import br.com.casa.services.util.BR;
 
 /**
@@ -18,6 +22,9 @@ import br.com.casa.services.util.BR;
  * 
  **/
 public class ClienteInsertValidator implements ConstraintValidator<ClienteInsert, ClienteNewDTO> {
+
+	@Autowired
+	private ClienteRepository repo;
 
 	public void initialize(ClienteInsert ann) {
 		System.out.println("Iniciada validação do DTO ");
@@ -46,9 +53,14 @@ public class ClienteInsertValidator implements ConstraintValidator<ClienteInsert
 
 			list.add(new FieldMessage("cpfCnpj", "CNPJ inválido"));
 		}
+
+		Cliente cl = repo.findByEmail(objDTO.getEmail());
+		if (cl != null)
+			list.add(new FieldMessage("email", "Campo email está duplicado"));
+
 		for (FieldMessage f : list) {
 			context.disableDefaultConstraintViolation(); // está desabilitando o default e na proxima linha habilitando
-			context.buildConstraintViolationWithTemplate(f.getMsg()).addPropertyNode(f.getFieldName())
+			context.buildConstraintViolationWithTemplate(f.getMensagem()).addPropertyNode(f.getCampo())
 					.addConstraintViolation();
 
 		}

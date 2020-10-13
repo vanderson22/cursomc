@@ -6,28 +6,28 @@ package br.com.casa.exceptions;
  */
 public class FieldMessage {
 
-	private String fieldName;
-	private String msg;
+	private String campo;
+	private String mensagem;
 
 	public FieldMessage(String fieldName, String msg) {
-		this.fieldName = fieldName;
-		this.msg = msg;
+		this.campo = fieldName;
+		this.mensagem = msg;
 	}
 
-	public String getFieldName() {
-		return fieldName;
+	public String getCampo() {
+		return campo;
 	}
 
-	public void setFieldName(String fieldName) {
-		this.fieldName = fieldName;
+	public void setCampo(String fieldName) {
+		this.campo = fieldName;
 	}
 
-	public String getMsg() {
-		return msg;
+	public String getMensagem() {
+		return mensagem;
 	}
 
-	public void setMsg(String msg) {
-		this.msg = msg;
+	public void setMensagem(String msg) {
+		this.mensagem = msg;
 	}
 
 }

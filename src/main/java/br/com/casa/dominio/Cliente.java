@@ -30,6 +30,7 @@ public class Cliente implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String nome;
+// Usar exceção personalizada.	@Column(unique = true)
 	private String email;
 	private String cpfCnpj;
 
@@ -40,7 +41,7 @@ public class Cliente implements Serializable {
 //	O cliente pode serializar endereço porém o endereço não pode fazer o mesmo
 //	Referencia ciclica //	@JsonManagedReference ... endereço é filho de cliente, embora endereço também tenha cliente
 //	@JsonManagedReference
-	@OneToMany(mappedBy = "cliente" , cascade = CascadeType.ALL) // quando remover cliente remover endereço
+	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL) // quando remover cliente remover endereço
 	private List<Endereco> enderecos = new ArrayList<>();
 	// para garantir não existir repetiçãoO
 

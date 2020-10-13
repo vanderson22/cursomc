@@ -81,7 +81,7 @@ public class ClienteResource {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Void> criar(@RequestBody ClienteNewDTO clienteNEW) throws URISyntaxException {
+	public ResponseEntity<Void> criar(@Valid @RequestBody ClienteNewDTO clienteNEW) throws URISyntaxException {
 		// Para validar
 		Cliente cliente = catService.criar(catService.fromDTO(clienteNEW));
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(cliente.getId())

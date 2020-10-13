@@ -1,13 +1,29 @@
 package br.com.casa.dominio;
 
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
+
+import br.com.casa.dominio.annotations.validation.ClienteInsert;
+
 /**
  * Utilizado para gravar com um novo cliente com Endereço e cidade
  * 
  * 
  ***/
+@ClienteInsert(message = "Ocorreu um erro de validação")
 public class ClienteNewDTO {
+
+	@NotEmpty(message = "Preenchimento obrigatório")
+	@Length(min = 5, max = 100, message = "Não foi possível validar o nome, pois não atende a quantidade de caracteres")
 	private String nome;
+
+	@NotEmpty(message = "Preenchimento obrigatório")
 	private String email;
+
+//	@NotEmpty(message = "Preenchimento obrigatório")
+//	@CPF
+//	@CNPJ
 	private String cpfCnpj;
 
 	private Integer tipo;

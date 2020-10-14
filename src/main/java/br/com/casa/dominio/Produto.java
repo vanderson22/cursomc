@@ -25,13 +25,15 @@ public class Produto implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String nome;
-	private Double preço;
+	private Double preco;
 
 	// NÃO instanciar listar em construtores
 	// não adicionar listas como parâmetros
 	 @JsonIgnore //@JsonBackReference // Problema de referencia ciclica pois um objeto produto contem categoria e vice
 	@ManyToMany
-	@JoinTable(name = "produto_categoria", joinColumns = @JoinColumn(name = "produto_id"), inverseJoinColumns = @JoinColumn(name = "categoria_id"))
+	@JoinTable(name = "produto_categoria",
+		joinColumns = @JoinColumn(name = "produto_id"), 
+		inverseJoinColumns = @JoinColumn(name = "categoria_id"))
 	private List<Categoria> categorias = new ArrayList<>();
 
 	@JsonIgnore // aqui eu ignoro pois puxo por pedido
@@ -42,11 +44,11 @@ public class Produto implements Serializable {
 
 	}
 
-	public Produto(Integer id, String nome, Double preço) {
+	public Produto(Integer id, String nome, Double preco) {
 		super();
 		this.setId(id);
 		this.setNome(nome);
-		this.setPreço(preço);
+		this.setPreco(preco);
 	}
 
 	// Pulo do gato
@@ -72,12 +74,12 @@ public class Produto implements Serializable {
 		this.categorias = categorias;
 	}
 
-	public Double getPreço() {
-		return preço;
+	public Double getPreco() {
+		return preco;
 	}
 
-	public void setPreço(Double preço) {
-		this.preço = preço;
+	public void setPreco(Double preco) {
+		this.preco = preco;
 	}
 
 	public String getNome() {
@@ -123,7 +125,7 @@ public class Produto implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Produto [id=" + id + ", nome=" + nome + ", preço=" + preço + "]";
+		return "Produto [id=" + id + ", nome=" + nome + ", preço=" + preco + "]";
 	}
 
 	public Set<ItemPedido> getItens() {

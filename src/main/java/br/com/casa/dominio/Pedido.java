@@ -30,11 +30,9 @@ public class Pedido implements Serializable {
 	@JsonFormat(pattern = "dd/MM/yyyy HH:mm")
 	private Date instante;
 
-	
 	@OneToOne(cascade = CascadeType.ALL, mappedBy = "pedido")
 	private Pagamento pagamento;
 
-	
 	@ManyToOne
 	@JoinColumn(name = "cliente_id")
 	private Cliente cliente;
@@ -58,6 +56,21 @@ public class Pedido implements Serializable {
 //		this.pagamento = pagamento;
 		this.cliente = cliente;
 		this.enderecoEntrega = enderecoEntrega;
+	}
+
+	/**
+	 * 
+	 * Executa um agrupamento dos subtotais
+	 * 
+	 **/
+	public Double getTotal() {
+
+		Double soma = 0.0;
+		for (ItemPedido item : itens) {
+			soma += item.getSubtotal();
+		}
+
+		return soma;
 	}
 
 	public Integer getId() {

@@ -44,6 +44,17 @@ public class ItemPedido implements Serializable {
 
 		return pk.getPedido();
 	}
+	
+	public void setPedido(Pedido p) {
+
+		  pk.setPedido(p);
+	}
+	
+
+	public void setProduto(Produto p) {
+
+		  pk.setProduto(p);
+	}
 
 	public Double getSubtotal() {
 		Double subtotal = 0.0;

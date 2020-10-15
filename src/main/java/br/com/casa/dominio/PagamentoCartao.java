@@ -2,9 +2,13 @@ package br.com.casa.dominio;
 
 import javax.persistence.Entity;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
+
 import br.com.casa.dominio.enums.EstadoPagamento;
 
 @Entity
+@JsonTypeName(value = "pagamentoCartao")
+// para o json instanciar de forma automatica no parametro @type
 public class PagamentoCartao extends Pagamento {
 
 	/**

@@ -11,11 +11,15 @@ import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import br.com.casa.dominio.enums.EstadoPagamento;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
+// Usado para identificar/instanciar subtipos, toda vez que vier um @type no 
+// json o pagamento vai instanciar sua sub classe.
 public abstract class Pagamento implements Serializable {
 
 	/**

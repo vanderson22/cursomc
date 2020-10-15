@@ -27,7 +27,7 @@ public class PRDConfiguration {
 	@Bean
 	public boolean instantiateTSTConfiguration() throws ParseException {
 //		if (propriedade.equals("create"))
-			return instant.instantiateDEVConfiguration();
+			return  true ; //  instant.instantiateDEVConfiguration();
 //		return false;
 	}
 

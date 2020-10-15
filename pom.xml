@@ -12,7 +12,7 @@
 	<groupId>br.com.casa</groupId>
 	<artifactId>app-cursomc</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>cursomc</name>
+	<name>app-cursomc</name>
 	<description>aplicação API Springboot</description>
 
 	<properties>

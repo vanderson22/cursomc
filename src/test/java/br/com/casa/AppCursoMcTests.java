@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import br.com.casa.resources.CategoriaResource;
 
 @SpringBootTest
-class CursomcApplicationTests {
+class AppCursoMcTests {
 
 	@Autowired
 	private CategoriaResource controller;

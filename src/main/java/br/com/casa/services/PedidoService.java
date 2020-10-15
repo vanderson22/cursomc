@@ -1,6 +1,7 @@
 package br.com.casa.services;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class PedidoService {
 		// garantia de novo pedido
 		pedido.setId(null);
 		pedido.setInstante(new Date());
-		
+
 		pedido.getEnderecoEntrega();
 
 		pedido.getPagamento().setEstado(EstadoPagamento.PENDENTE);
@@ -73,6 +74,13 @@ public class PedidoService {
 		itemService.criar(pedido.getItens());
 
 		return pedido;
+	}
+
+	public List<Pedido> buscar() {
+
+		List<Pedido> optional = repo.findAll();
+
+		return optional;
 	}
 
 }

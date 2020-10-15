@@ -32,15 +32,19 @@ public class PedidoResource {
 		// Handler para interceptar erros
 		return ResponseEntity.ok().body(pedidoService.buscar(id));
 	}
-	
-	
+
+	@RequestMapping(method = RequestMethod.GET)
+	public ResponseEntity<?> buscarTodos() {
+		// Handler para interceptar erros
+		return ResponseEntity.ok().body(pedidoService.buscar());
+	}
+
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Void> criar(  @RequestBody Pedido pedido) throws URISyntaxException {
+	public ResponseEntity<Void> criar(@RequestBody Pedido pedido) throws URISyntaxException {
 		// Para validar
 
 		Pedido criado = pedidoService.criar(pedido);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(criado.getId())
-				.toUri();
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(criado.getId()).toUri();
 		// return ResponseEntity.ok().body(catService.buscar(categoria));
 		return ResponseEntity.created(uri).build();
 	}

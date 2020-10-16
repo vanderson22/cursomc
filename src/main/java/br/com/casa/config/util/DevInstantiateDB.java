@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +32,7 @@ import br.com.casa.repositories.ItemRepository;
 import br.com.casa.repositories.PagamentoRepository;
 import br.com.casa.repositories.PedidoRepository;
 import br.com.casa.repositories.ProdutoRepository;
+import br.com.casa.services.PedidoService;
 
 /**
  * Vai realizar a configuração com o profile test
@@ -61,11 +64,13 @@ public class DevInstantiateDB {
 	@Autowired
 	private ItemRepository itemRepo;
 
+	private static final Logger log = LoggerFactory.getLogger(PedidoService.class);
+
 	public boolean instantiateDEVConfiguration() throws ParseException {
-		System.out.println("Instanciando banco de dados em Desenvolvimento");
+		log.debug("Instanciando banco de dados em Desenvolvimento");
 		// On start Cria as categirias
 		// Instanciação do Projeto -> Isso é um teste funcional
-		System.out.println("Criadas Categorias");
+		log.debug("Criadas Categorias");
 		Categoria c1 = new Categoria(null, "Informática");
 		Categoria c2 = new Categoria(null, "Escritório");
 		Categoria c3 = new Categoria(null, "Farmácia");
@@ -120,7 +125,8 @@ public class DevInstantiateDB {
 		estadoRepo.saveAll(Arrays.asList(e1, e2));
 		cidadeRepo.saveAll(Arrays.asList(cid1, cid2, cid3));
 
-		Cliente cli1 = new Cliente(null, "Maria silva", "maria@mail.com", "003.153.160-00", TipoCliente.PESSOAFISICA);
+		Cliente cli1 = new Cliente(null, "Maria silva", "vanderson.01@hotmail.com", "003.153.160-00",
+				TipoCliente.PESSOAFISICA);
 		cli1.getTelefones().addAll(Arrays.asList("222-3333", "323-4544"));
 		Cliente cli2 = new Cliente(null, "Joana silva", "joana.silva@mail.com", "003.153.160-00",
 				TipoCliente.PESSOAFISICA);
@@ -165,7 +171,7 @@ public class DevInstantiateDB {
 
 		itemRepo.saveAll(Arrays.asList(ip1, ip2, ip3));
 
-		System.out.println("Finalizou a instanciação");
+		log.debug("Finalizou a instanciação");
 //		repo.save(c1);
 //		repo.save(c2);
 		return true;

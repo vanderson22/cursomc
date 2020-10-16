@@ -4,7 +4,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +21,8 @@ import br.com.casa.repositories.PedidoRepository;
 
 @Service
 public class PedidoService {
+
+	private static final Logger log = LoggerFactory.getLogger(PedidoService.class);
 
 	@Autowired
 	private PedidoRepository repo;
@@ -39,6 +44,9 @@ public class PedidoService {
 	@Autowired
 	private EmailService ems;
 
+	@Value("${email.enabled}")
+	private String ligado;
+
 	public Pedido buscar(Integer id) throws ObjectNotFoundException {
 
 		Optional<Pedido> optional = repo.findById(id);
@@ -51,6 +59,7 @@ public class PedidoService {
 	@Transactional
 	public Pedido criar(Pedido pedido) {
 
+		log.info("Criando novo pedido ...");
 		// garantia de novo pedido
 		pedido.setId(null);
 		pedido.setInstante(new Date());
@@ -79,11 +88,14 @@ public class PedidoService {
 			// após criar o pedido realizar a associação do id
 			i.setPedido(pedido);
 		}
+		log.info("criado novo pedido - id [" + pedido.getId() + "]");
 
 		// salva os itens do pedido
 		itemService.criar(pedido.getItens());
 
-		ems.sendConfirmationMail(pedido);
+		if (ligado.equals("true")) {
+			ems.sendConfirmationMail(pedido);
+		}
 		return pedido;
 	}
 

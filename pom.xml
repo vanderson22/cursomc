@@ -30,6 +30,12 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 
+
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
 		<!-- mesmo sem as dependencias não da erro no application.properties -->
 		<dependency>
 			<groupId>com.h2database</groupId>
@@ -70,7 +76,7 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-<!-- 			<version>6.0.6</version> -->
+			<!-- <version>6.0.6</version> -->
 		</dependency>
 
 	</dependencies>

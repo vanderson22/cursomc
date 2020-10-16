@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import br.com.casa.config.util.DevInstantiateDB;
+import br.com.casa.services.EmailService;
+import br.com.casa.services.MockMailService;
 
 /**
  * Vai realizar a configuração com o profile test
@@ -23,6 +25,13 @@ public class DevConfiguration {
 	// recupera a propertie do arquivo indicado no profile
 	@Value(value = "${spring.jpa.hibernate.ddl-auto}")
 	private String propriedade;
+
+	// Apenas para fins de teste criar um bean mock de email service
+	@Bean
+	public EmailService getEmailService() {
+
+		return new MockMailService();
+	}
 
 	@Bean
 	public boolean instantiateDEVConfiguration() throws ParseException {

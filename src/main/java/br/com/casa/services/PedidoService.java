@@ -36,6 +36,9 @@ public class PedidoService {
 	@Autowired
 	private EnderecoService endService;
 
+	@Autowired
+	private EmailService ems;
+
 	public Pedido buscar(Integer id) throws ObjectNotFoundException {
 
 		Optional<Pedido> optional = repo.findById(id);
@@ -80,7 +83,7 @@ public class PedidoService {
 		// salva os itens do pedido
 		itemService.criar(pedido.getItens());
 
-		System.out.println(pedido);
+		ems.sendConfirmationMail(pedido);
 		return pedido;
 	}
 

@@ -44,16 +44,15 @@ public class ItemPedido implements Serializable {
 
 		return pk.getPedido();
 	}
-	
+
 	public void setPedido(Pedido p) {
 
-		  pk.setPedido(p);
+		pk.setPedido(p);
 	}
-	
 
 	public void setProduto(Produto p) {
 
-		  pk.setProduto(p);
+		pk.setProduto(p);
 	}
 
 	public Double getSubtotal() {
@@ -107,6 +106,22 @@ public class ItemPedido implements Serializable {
 		int result = 1;
 		result = prime * result + ((pk == null) ? 0 : pk.hashCode());
 		return result;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("ItemPedido [desconto=");
+		builder.append("Produto [nome=");
+		builder.append(getProduto().getNome());
+		builder.append(", quantidade=");
+		builder.append(quantidade);
+		builder.append(", preco=");
+		builder.append(preco);
+		builder.append(", subtotal=");
+		builder.append(getSubtotal());
+		builder.append("]");
+		return builder.toString();
 	}
 
 	@Override

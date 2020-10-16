@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.casa.dominio.ItemPedido;
 import br.com.casa.dominio.PagamentoBoleto;
@@ -38,6 +39,7 @@ public class PedidoService {
 
 	}
 
+	@Transactional
 	public Pedido criar(Pedido pedido) {
 
 		// garantia de novo pedido
@@ -72,7 +74,7 @@ public class PedidoService {
 
 		// salva os itens do pedido
 		itemService.criar(pedido.getItens());
-
+		System.out.println(pedido);
 		return pedido;
 	}
 

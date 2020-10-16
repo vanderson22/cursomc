@@ -62,6 +62,7 @@ public class DevInstantiateDB {
 	private ItemRepository itemRepo;
 
 	public boolean instantiateDEVConfiguration() throws ParseException {
+		System.out.println("Instanciando banco de dados em Desenvolvimento");
 		// On start Cria as categirias
 		// Instanciação do Projeto -> Isso é um teste funcional
 		System.out.println("Criadas Categorias");

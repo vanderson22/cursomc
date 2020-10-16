@@ -122,6 +122,33 @@ public class Pedido implements Serializable {
 	}
 
 	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Pedido [número=");
+		builder.append(id);
+		builder.append(", instante=");
+		builder.append(instante);
+		builder.append(", pagamento=");
+		builder.append(pagamento);
+		builder.append(", cliente=");
+		builder.append(cliente.getNome());
+		builder.append(", Endereco de Entrega=");
+		builder.append(enderecoEntrega);
+		builder.append(", Situação do pagamento=");
+		builder.append(getPagamento().getEstado());
+		builder.append(" itens do Pedido = ");
+		for (ItemPedido itemPedido : getItens()) {
+
+			builder.append(itemPedido.toString());
+		}
+
+		builder.append(", Valor total= ");
+		builder.append(getTotal());
+		builder.append("]");
+		return builder.toString();
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;

@@ -21,14 +21,14 @@ public class PRDConfiguration {
 	private DevInstantiateDB instant;
 
 	// recupera a propertie do arquivo indicado no profile
-	@Value("spring.jpa.hibernate.ddl-auto")
+	@Value(value = "${spring.jpa.hibernate.ddl-auto}")
 	private String propriedade;
 
 	@Bean
-	public boolean instantiateTSTConfiguration() throws ParseException {
-//		if (propriedade.equals("create"))
-			return  true ; //  instant.instantiateDEVConfiguration();
-//		return false;
+	public boolean instantiatePRDConfiguration() throws ParseException {
+		if (propriedade.equals("create"))
+			instant.instantiateDEVConfiguration();
+		return false;
 	}
 
 }

@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.casa.dominio.ItemPedido;
 import br.com.casa.dominio.PagamentoBoleto;
 import br.com.casa.dominio.Pedido;
+import br.com.casa.dominio.Produto;
 import br.com.casa.dominio.enums.EstadoPagamento;
 import br.com.casa.exceptions.ObjectNotFoundException;
 import br.com.casa.repositories.PedidoRepository;
@@ -29,6 +30,11 @@ public class PedidoService {
 	private ProdutoService produtoRepo;
 	@Autowired
 	private ItemPedidoService itemService;
+	@Autowired
+	private ClienteService clienteService;
+
+	@Autowired
+	private EnderecoService endService;
 
 	public Pedido buscar(Integer id) throws ObjectNotFoundException {
 
@@ -46,7 +52,8 @@ public class PedidoService {
 		pedido.setId(null);
 		pedido.setInstante(new Date());
 
-		pedido.getEnderecoEntrega();
+		pedido.setEnderecoEntrega(endService.buscarPorId(pedido.getEnderecoEntrega().getId()));
+		pedido.setCliente(clienteService.buscar(pedido.getCliente().getId()));
 
 		pedido.getPagamento().setEstado(EstadoPagamento.PENDENTE);
 		pedido.getPagamento().setPedido(pedido);
@@ -56,24 +63,23 @@ public class PedidoService {
 			boletoService.preencherPagamentoBoleto(boleto, new Date());
 
 		}
-//
-//		if (pedido.getPagamento() instanceof PagamentoCartao) {
-//			PagamentoCartao pc = (PagamentoCartao) pedido.getPagamento();
-//		}
 		// isso não é recomendável, crie sempre uma nova variável
 		pedido = repo.save(pedido);
 		pagamentoService.criar(pedido.getPagamento());
 		for (ItemPedido i : pedido.getItens()) {
+
+			Produto produto = produtoRepo.buscar(i.getProduto().getId());
 			i.setDesconto(0.0);
 			// pegando preços.
-			i.setPreco(produtoRepo.buscar(i.getProduto().getId()).getPreco());
-
+			i.setProduto(produto);
+			i.setPreco(produto.getPreco());
 			// após criar o pedido realizar a associação do id
 			i.setPedido(pedido);
 		}
 
 		// salva os itens do pedido
 		itemService.criar(pedido.getItens());
+
 		System.out.println(pedido);
 		return pedido;
 	}

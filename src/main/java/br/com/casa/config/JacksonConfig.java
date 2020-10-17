@@ -10,8 +10,8 @@ import br.com.casa.dominio.PagamentoBoleto;
 import br.com.casa.dominio.PagamentoCartao;
 
 /**
- * Vai fazer o mapeamento dos @types pagamento com cartao e boleto.
- * 
+ * Vai fazer o mapeamento dos @types pagamento com cartao e boleto. Pagamento
+ * com cartão OU boleto serão instanciados.
  */
 @Configuration
 public class JacksonConfig {

@@ -67,7 +67,7 @@ public class Pedido implements Serializable {
 
 		Double soma = 0.0;
 		for (ItemPedido item : itens) {
-			soma += item.getSubtotal();
+			soma += item.getSubTotal();
 		}
 
 		return soma;

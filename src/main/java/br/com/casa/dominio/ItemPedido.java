@@ -55,7 +55,7 @@ public class ItemPedido implements Serializable {
 		pk.setProduto(p);
 	}
 
-	public Double getSubtotal() {
+	public Double getSubTotal() {
 		Double subtotal = 0.0;
 		subtotal = quantidade * (preco - desconto);
 
@@ -118,7 +118,7 @@ public class ItemPedido implements Serializable {
 		builder.append(", preco=");
 		builder.append(preco);
 		builder.append(", subtotal=");
-		builder.append(getSubtotal());
+		builder.append(getSubTotal());
 		builder.append("]");
 		return builder.toString();
 	}

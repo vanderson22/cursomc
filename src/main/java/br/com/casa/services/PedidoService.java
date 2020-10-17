@@ -94,7 +94,7 @@ public class PedidoService {
 		itemService.criar(pedido.getItens());
 
 		if (ligado.equals("true")) {
-			ems.sendConfirmationMail(pedido);
+			ems.sendOrderConfirmationHtmlEmail(pedido);
 		}
 		return pedido;
 	}

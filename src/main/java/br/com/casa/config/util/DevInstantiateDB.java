@@ -67,10 +67,10 @@ public class DevInstantiateDB {
 	private static final Logger log = LoggerFactory.getLogger(PedidoService.class);
 
 	public boolean instantiateDEVConfiguration() throws ParseException {
-		log.debug("Instanciando banco de dados em Desenvolvimento");
+		log.info("Instanciando banco de dados em Desenvolvimento");
 		// On start Cria as categirias
 		// Instanciação do Projeto -> Isso é um teste funcional
-		log.debug("Criadas Categorias");
+		log.info("Criadas Categorias");
 		Categoria c1 = new Categoria(null, "Informática");
 		Categoria c2 = new Categoria(null, "Escritório");
 		Categoria c3 = new Categoria(null, "Farmácia");
@@ -171,7 +171,7 @@ public class DevInstantiateDB {
 
 		itemRepo.saveAll(Arrays.asList(ip1, ip2, ip3));
 
-		log.debug("Finalizou a instanciação");
+		log.info("Finalizou a instanciação");
 //		repo.save(c1);
 //		repo.save(c2);
 		return true;

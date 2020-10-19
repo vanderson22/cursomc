@@ -1,4 +1,4 @@
-package br.com.casa.dominio;
+package br.com.casa.dominio.DTO;
 
 import javax.validation.constraints.NotEmpty;
 
@@ -25,6 +25,9 @@ public class ClienteNewDTO {
 //	@CPF
 //	@CNPJ
 	private String cpfCnpj;
+	
+	@NotEmpty(message = "A senha não pode ser vazia")
+	private String senha;
 
 	private Integer tipo;
 	private String logradouro;
@@ -59,6 +62,20 @@ public class ClienteNewDTO {
 		this.telefone1 = telefone1;
 		this.telefone2 = telefone2;
 		this.telefone3 = telefone3;
+	}
+	
+	
+	public ClienteNewDTO senha() {
+		   this.setSenha(senha);
+		return this;
+	}
+	
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
 	}
 
 	public Integer getCidadeId() {

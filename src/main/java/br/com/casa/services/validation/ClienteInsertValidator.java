@@ -9,7 +9,7 @@ import javax.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import br.com.casa.dominio.Cliente;
-import br.com.casa.dominio.ClienteNewDTO;
+import br.com.casa.dominio.DTO.ClienteNewDTO;
 import br.com.casa.dominio.annotations.validation.ClienteInsert;
 import br.com.casa.dominio.enums.TipoCliente;
 import br.com.casa.exceptions.FieldMessage;

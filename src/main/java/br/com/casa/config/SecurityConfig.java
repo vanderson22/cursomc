@@ -1,7 +1,5 @@
 package br.com.casa.config;
 
-import java.util.Arrays;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +9,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -20,6 +19,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	// para liberar o h2
+	@SuppressWarnings("unused")
 	@Autowired
 	private Environment env;
 	
@@ -44,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	 */
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-       System.out.println("Starting");
+       System.out.println("Starting webSecurity configure");
 		// Liberar os frames do  h2, mesmo com as urls liberadas os frames são bloqueados. 
  		  http.headers().frameOptions().disable();
 		 
@@ -73,4 +73,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	    return source;
 	  }
 
+	/**
+	 *   Cria um componente encoder na memoria para autowired
+	 * 
+	 * **/
+	@Bean
+	public BCryptPasswordEncoder criarBCrypt() {
+		
+		return new BCryptPasswordEncoder();
+	}
 }

@@ -37,6 +37,9 @@ public class Cliente implements Serializable {
 //	private TipoCliente tipo ->>> macete; VAMOS ARMAZENAR UM INTEIRO E expor uma enum
 	private Integer tipo;
 
+	@JsonIgnore
+	private String senha;
+
 //	 pulo do gato
 //	O cliente pode serializar endereço porém o endereço não pode fazer o mesmo
 //	Referencia ciclica //	@JsonManagedReference ... endereço é filho de cliente, embora endereço também tenha cliente
@@ -63,6 +66,12 @@ public class Cliente implements Serializable {
 		this.email = email;
 		this.cpfCnpj = cpfCnpj;
 		this.tipo = (tipo == null) ? null : tipo.getCodigo();
+	}
+
+	@JsonIgnore
+	public Cliente senha(String senha) {
+		this.setSenha(senha);
+		return this;
 	}
 
 	public Integer getId() {
@@ -153,6 +162,14 @@ public class Cliente implements Serializable {
 
 	public void setPedidos(List<Pedido> pedidos) {
 		this.pedidos = pedidos;
+	}
+
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
 	}
 
 }

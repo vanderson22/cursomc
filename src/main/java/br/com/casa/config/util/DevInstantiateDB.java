@@ -8,6 +8,7 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.casa.dominio.Categoria;
@@ -63,6 +64,9 @@ public class DevInstantiateDB {
 
 	@Autowired
 	private ItemRepository itemRepo;
+	
+	@Autowired
+	private BCryptPasswordEncoder pe;
 
 	private static final Logger log = LoggerFactory.getLogger(PedidoService.class);
 
@@ -126,10 +130,12 @@ public class DevInstantiateDB {
 		cidadeRepo.saveAll(Arrays.asList(cid1, cid2, cid3));
 
 		Cliente cli1 = new Cliente(null, "Maria silva", "vanderson.01@hotmail.com", "003.153.160-00",
-				TipoCliente.PESSOAFISICA);
+				TipoCliente.PESSOAFISICA)
+				.senha(pe.encode("12345"));
 		cli1.getTelefones().addAll(Arrays.asList("222-3333", "323-4544"));
 		Cliente cli2 = new Cliente(null, "Joana silva", "joana.silva@mail.com", "003.153.160-00",
-				TipoCliente.PESSOAFISICA);
+				TipoCliente.PESSOAFISICA)
+				.senha(pe.encode("54321"));;
 
 		cli2.getTelefones().addAll(Arrays.asList("222-3333", "323-4544"));
 

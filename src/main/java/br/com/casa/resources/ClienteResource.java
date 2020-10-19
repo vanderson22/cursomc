@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.casa.dominio.Cliente;
-import br.com.casa.dominio.ClienteNewDTO;
 import br.com.casa.dominio.DTO.ClienteDTO;
+import br.com.casa.dominio.DTO.ClienteNewDTO;
 import br.com.casa.services.ClienteService;
 
 /**

@@ -9,13 +9,14 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.casa.dominio.Cidade;
 import br.com.casa.dominio.Cliente;
-import br.com.casa.dominio.ClienteNewDTO;
 import br.com.casa.dominio.Endereco;
 import br.com.casa.dominio.DTO.ClienteDTO;
+import br.com.casa.dominio.DTO.ClienteNewDTO;
 import br.com.casa.dominio.enums.TipoCliente;
 import br.com.casa.exceptions.DataIntegridadeException;
 import br.com.casa.exceptions.ObjectNotFoundException;
@@ -33,6 +34,9 @@ public class ClienteService {
 
 	@Autowired
 	private EnderecoRepository enderecoRepo;
+	
+	@Autowired
+	private BCryptPasswordEncoder encoder;
 
 	public Cliente buscar(Integer id) throws ObjectNotFoundException {
 
@@ -82,7 +86,8 @@ public class ClienteService {
 
 	public Cliente fromDTO(ClienteDTO dto) {
 
-		return new Cliente(dto.getId(), dto.getNome(), dto.getEmail(), null, null);
+		return new Cliente(dto.getId(), dto.getNome(), dto.getEmail(), null, null)
+				.senha(null);
 	}
 
 //	@Transactional
@@ -90,7 +95,8 @@ public class ClienteService {
 	public Cliente fromDTO(ClienteNewDTO clienteNEW) {
 
 		Cliente cliente = new Cliente(null, clienteNEW.getNome(), clienteNEW.getEmail(), clienteNEW.getCpfCnpj(),
-				TipoCliente.toEnum(clienteNEW.getTipo()));
+				TipoCliente.toEnum(clienteNEW.getTipo()))
+				                  .senha(encoder.encode(clienteNEW.getSenha()));
 
 		Cidade cidade = cidadeRepo.findById(clienteNEW.getCidadeId()).orElseThrow(() -> new ObjectNotFoundException(
 				"Cidade não encontrada  - identificador :[" + clienteNEW.getCidadeId() + "]"));

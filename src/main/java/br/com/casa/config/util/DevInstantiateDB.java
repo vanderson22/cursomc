@@ -23,6 +23,7 @@ import br.com.casa.dominio.PagamentoCartao;
 import br.com.casa.dominio.Pedido;
 import br.com.casa.dominio.Produto;
 import br.com.casa.dominio.enums.EstadoPagamento;
+import br.com.casa.dominio.enums.Perfil;
 import br.com.casa.dominio.enums.TipoCliente;
 import br.com.casa.repositories.CategoriaRepository;
 import br.com.casa.repositories.CidadeRepository;
@@ -132,10 +133,13 @@ public class DevInstantiateDB {
 		Cliente cli1 = new Cliente(null, "Maria silva", "vanderson.01@hotmail.com", "003.153.160-00",
 				TipoCliente.PESSOAFISICA)
 				.senha(pe.encode("12345"));
+		
 		cli1.getTelefones().addAll(Arrays.asList("222-3333", "323-4544"));
 		Cliente cli2 = new Cliente(null, "Joana silva", "joana.silva@mail.com", "003.153.160-00",
 				TipoCliente.PESSOAFISICA)
-				.senha(pe.encode("54321"));;
+				.senha(pe.encode("54321"));
+//		 Também é um admin
+				cli2.setPerfis(Perfil.ADMIN);
 
 		cli2.getTelefones().addAll(Arrays.asList("222-3333", "323-4544"));
 

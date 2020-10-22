@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,6 +19,7 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import br.com.casa.dominio.enums.Perfil;
 import br.com.casa.dominio.enums.TipoCliente;
 
 @Entity
@@ -52,11 +55,17 @@ public class Cliente implements Serializable {
 	@CollectionTable(name = "telefone")
 	private Set<String> telefones = new HashSet<>();
 
+	@ElementCollection(fetch = FetchType.EAGER)
+	@CollectionTable(name = "perfis")
+	private Set<Integer> perfis = new HashSet<>();
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "cliente")
 	private List<Pedido> pedidos = new ArrayList<>();
 
 	public Cliente() {
+		
+		setPerfis(Perfil.CLIENTE);
 	}
 
 	public Cliente(Integer id, String nome, String email, String cpfCnpj, TipoCliente tipo) {
@@ -66,6 +75,7 @@ public class Cliente implements Serializable {
 		this.email = email;
 		this.cpfCnpj = cpfCnpj;
 		this.tipo = (tipo == null) ? null : tipo.getCodigo();
+		setPerfis(Perfil.CLIENTE);
 	}
 
 	@JsonIgnore
@@ -80,6 +90,16 @@ public class Cliente implements Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public Set<Perfil> getPerfis() {
+		// Passa um inteiro para uma set de perfil
+		return perfis.stream().map(perf -> Perfil.toEnum(perf)).collect(Collectors.toSet());
+	}
+
+	public void setPerfis(Perfil p) {
+
+		this.perfis.add(p.getCodigo());
 	}
 
 	public String getNome() {

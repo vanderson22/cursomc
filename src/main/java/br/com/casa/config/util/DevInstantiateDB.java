@@ -130,7 +130,7 @@ public class DevInstantiateDB {
 		estadoRepo.saveAll(Arrays.asList(e1, e2));
 		cidadeRepo.saveAll(Arrays.asList(cid1, cid2, cid3));
 
-		Cliente cli1 = new Cliente(null, "Maria silva", "vanderson.01@hotmail.com", "003.153.160-00",
+		Cliente cli1 = new Cliente(null, "Vanderson nogueira", "vanderson.01@hotmail.com", "003.153.160-00",
 				TipoCliente.PESSOAFISICA)
 				.senha(pe.encode("12345"));
 		

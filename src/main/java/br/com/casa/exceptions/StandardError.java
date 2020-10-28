@@ -7,13 +7,13 @@ package br.com.casa.exceptions;
 public class StandardError {
 
 	private Integer status;
-	private String msg;
+	private String mensagem;
 	private Long timestamp;
 
 	public StandardError(Integer status, String msg, Long timestamp) {
 		super();
 		this.status = status;
-		this.msg = msg;
+		this.mensagem = msg;
 		this.timestamp = timestamp;
 	}
 
@@ -25,12 +25,12 @@ public class StandardError {
 		this.status = status;
 	}
 
-	public String getMsg() {
-		return msg;
+	public String getMensagem() {
+		return mensagem;
 	}
 
-	public void setMsg(String msg) {
-		this.msg = msg;
+	public void setMensagem(String msg) {
+		this.mensagem = msg;
 	}
 
 	public Long getTimestamp() {

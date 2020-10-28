@@ -78,4 +78,12 @@ public class DetalhesDeUsuario implements UserDetails {
 		return true;
 	}
 
+	/**
+	 *  @param admin, recebe um perfil 
+	 *   Consulta o usuário logado no sistema para verificar se possui o perfil solicitado.
+	 * **/
+	public boolean hasHole(Perfil admin) {
+		return authorities.contains(new SimpleGrantedAuthority(admin.getEstado()));
+	}
+
 }

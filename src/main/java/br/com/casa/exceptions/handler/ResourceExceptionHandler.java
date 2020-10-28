@@ -10,6 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import br.com.casa.exceptions.AuthorizationException;
 import br.com.casa.exceptions.DataIntegridadeException;
 import br.com.casa.exceptions.ObjectNotFoundException;
 import br.com.casa.exceptions.StandardError;
@@ -63,5 +64,15 @@ public class ResourceExceptionHandler {
 
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value()).body(standardError);
 	}
+	
+	@ExceptionHandler(AuthorizationException.class)
+	public ResponseEntity<StandardError> objectNotFound(AuthorizationException e, HttpServletRequest request) {
+
+		StandardError standardError = new StandardError(HttpStatus.UNAUTHORIZED.value(), e.getMessage(),
+				System.currentTimeMillis());
+
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(standardError);
+	}
+
 
 }

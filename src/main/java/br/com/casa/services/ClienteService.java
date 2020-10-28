@@ -17,12 +17,15 @@ import br.com.casa.dominio.Cliente;
 import br.com.casa.dominio.Endereco;
 import br.com.casa.dominio.DTO.ClienteDTO;
 import br.com.casa.dominio.DTO.ClienteNewDTO;
+import br.com.casa.dominio.enums.Perfil;
 import br.com.casa.dominio.enums.TipoCliente;
+import br.com.casa.exceptions.AuthorizationException;
 import br.com.casa.exceptions.DataIntegridadeException;
 import br.com.casa.exceptions.ObjectNotFoundException;
 import br.com.casa.repositories.CidadeRepository;
 import br.com.casa.repositories.ClienteRepository;
 import br.com.casa.repositories.EnderecoRepository;
+import br.com.casa.services.security.DetalhesDeUsuario;
 
 @Service
 public class ClienteService {
@@ -39,7 +42,13 @@ public class ClienteService {
 	private BCryptPasswordEncoder encoder;
 
 	public Cliente buscar(Integer id) throws ObjectNotFoundException {
-
+        // o cliente só pode buscar a si próprio, porém o perfil administrativo pode buscar qualquer id
+		   DetalhesDeUsuario autenticado = UsuarioService.autenticado();
+		    if(autenticado == null || ! autenticado.hasHole(Perfil.ADMIN) && !id.equals(autenticado.getId())) {
+		    	
+		    	throw new AuthorizationException("Usuário não possui o perfil de administrador e não pode consultar outros usuários");
+		    }
+		
 		Optional<Cliente> optional = repo.findById(id);
 
 		return optional.orElseThrow(

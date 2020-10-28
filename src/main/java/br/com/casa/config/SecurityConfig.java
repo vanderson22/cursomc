@@ -16,6 +16,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import br.com.casa.services.security.JWTAuthorizationFilter;
 import br.com.casa.services.security.JWTUtil;
 import br.com.casa.services.security.JwtAuthenticationFilter;
 
@@ -77,11 +78,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		     .authorizeRequests()
 		     .antMatchers(PUBLIC_MATCHERS).permitAll()
 			 .antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
-			 .anyRequest().authenticated().and()
-             .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtUtil )) // registrar o filtro na configuração
-//         .addFilter(new JWTAuthorizationFilter(authenticationManager()))
+			 .anyRequest().authenticated();
+		http .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtUtil )) ;// registrar o filtro de authenticação
+        http .addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetail)); // registra o filtro de authorização
 				// this disables session creation on Spring Security
-				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 	}
 

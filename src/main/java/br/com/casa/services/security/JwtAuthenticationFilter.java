@@ -30,10 +30,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
 	private AuthenticationManager authManager;
 	private JWTUtil jwtUtil;
-	
-	
-	private static final Logger log = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
+	private static final Logger log = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
 	/**
 	 * injeção das propriedades pelo construtor
@@ -46,16 +44,15 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	}
 
 	/**
-	 * Tentativa de autenticação
-	 * quando for solicitado algo para /login Recupera o request e converte para
-	 * otipo de credenciais
+	 * Tentativa de autenticação quando for solicitado algo para /login Recupera o
+	 * request e converte para otipo de credenciais
 	 * 
-	 * em seguida faz a instanciação de passwordAuthToken do spring security, 
+	 * em seguida faz a instanciação de passwordAuthToken do spring security,
 	 **/
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException {
-		
+
 		log.info("Realizando tentativa de login...");
 
 		CredenciaisDTO creds = null;
@@ -71,29 +68,32 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(creds.getEmail(),
 				creds.getSenha(), new ArrayList<>());
 
 		Authentication authenticate = authManager.authenticate(auth);
 		log.info("Credenciais recuperadas " + creds.getEmail() + " - Acesso do tipo"
 				+ authenticate.getAuthorities().toString());
-		
+
 		return authenticate;
 
 	}
 
 	/**
 	 * 
-	 * Gera um token e coloca na resposta da requisição, recebe o auth que foi gerado no attempt
+	 * Gera um token e coloca na resposta da requisição, recebe o auth que foi
+	 * gerado no attempt
 	 * 
 	 */
 	@Override
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authResult) throws IOException, ServletException {
-		
-		   String usuario = 	((DetalhesDeUsuario) authResult.getPrincipal()).getUsername();
-		   String token  = jwtUtil.generateToken(usuario);
-		   response.addHeader("Authorization" , "Bearer " + token);
+
+		String usuario = ((DetalhesDeUsuario) authResult.getPrincipal()).getUsername();
+		String token = jwtUtil.generateToken(usuario);
+
+		log.trace("Token criado [" + token + "]");
+		response.addHeader("Authorization", "Bearer " + token);
 	}
 }

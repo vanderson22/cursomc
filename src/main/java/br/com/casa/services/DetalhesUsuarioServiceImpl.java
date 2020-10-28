@@ -18,17 +18,18 @@ public class DetalhesUsuarioServiceImpl implements UserDetailsService {
 	@Autowired
 	private ClienteRepository repo;
 
-	private static final Logger log = LoggerFactory.getLogger(SMTPMailService.class);
+	private static final Logger log = LoggerFactory.getLogger(DetalhesUsuarioServiceImpl.class);
 
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-// buscar por email
+		log.info("Iniciando busca do cliente  - email [" + email + "]");
 		Cliente cliente = repo.findByEmail(email);
 
 		if (cliente == null)
 			throw new UsernameNotFoundException("Cliente não foi encontrado - email [" + email + "]");
 
-		log.debug("Cliente foi encontrado no banco de dados [" + cliente.getId() + "]");
+		log.info("Cliente foi encontrado no banco de dados [" + cliente.getId() + "] email [" + cliente.getEmail()
+				+ "]");
 		return new DetalhesDeUsuario(cliente.getId(), cliente.getSenha(), cliente.getEmail(), cliente.getPerfis());
 	}
 

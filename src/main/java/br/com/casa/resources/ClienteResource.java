@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,6 +42,7 @@ public class ClienteResource {
 		return ResponseEntity.ok().body(catService.buscar(id));
 	}
 
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<List<ClienteDTO>> buscarTodos() {
 		List<Cliente> buscarTodos = catService.buscarTodos();
@@ -51,6 +53,7 @@ public class ClienteResource {
 		return ResponseEntity.ok().body(listaDTO);
 	}
 
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(value = "/page", method = RequestMethod.GET)
 	public ResponseEntity<Page<ClienteDTO>> buscaPaginada(
 			@RequestParam(value = "pagina", defaultValue = "0") Integer pagina,
@@ -65,8 +68,10 @@ public class ClienteResource {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-	// Atenção neste ponto! o @Valid ocorre antes de setar o id, então como validar o e-mail ?
-	  // Validador customizado capturando o httpRequest  - ID - Cliente Update Validator
+	// Atenção neste ponto! o @Valid ocorre antes de setar o id, então como validar
+	// o e-mail ?
+	// Validador customizado capturando o httpRequest - ID - Cliente Update
+	// Validator
 	public ResponseEntity<Void> atualizar(@PathVariable Integer id, @Valid @RequestBody ClienteDTO clienteDTO) {
 		clienteDTO.setId(id);
 		catService.update(catService.fromDTO(clienteDTO));
@@ -74,6 +79,7 @@ public class ClienteResource {
 		return ResponseEntity.noContent().build();
 	}
 
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<Void> atualizar(@PathVariable Integer id) throws URISyntaxException {
 

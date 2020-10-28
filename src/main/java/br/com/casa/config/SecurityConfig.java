@@ -45,7 +45,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	 **/
 	private static final String[] PUBLIC_MATCHERS = { "/h2-console/**", "/h2/**", };
 
-	private static final String[] PUBLIC_MATCHERS_GET = { "/categorias/**", "/produtos/**", "/clientes/**" };
+	private static final String[] PUBLIC_MATCHERS_GET = { "/categorias/**", "/produtos/**"};
+	private static final String[] PUBLIC_MATCHERS_POST = { "/clientes/**" };
 
 	/**
 	 *  Esse cara vai ser capaz de buscar o usuário pelo e-mail usando o userDetail informado
@@ -80,6 +81,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		     .authorizeRequests()
 		     .antMatchers(PUBLIC_MATCHERS).permitAll()
 			 .antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
+			 .antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
 			 .anyRequest().authenticated();
 		http .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtUtil )) ;// registrar o filtro de authenticação
         http .addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetail)); // registra o filtro de authorização

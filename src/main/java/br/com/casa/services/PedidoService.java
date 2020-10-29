@@ -8,16 +8,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.casa.dominio.Cliente;
 import br.com.casa.dominio.ItemPedido;
 import br.com.casa.dominio.PagamentoBoleto;
 import br.com.casa.dominio.Pedido;
 import br.com.casa.dominio.Produto;
 import br.com.casa.dominio.enums.EstadoPagamento;
+import br.com.casa.exceptions.AuthorizationException;
 import br.com.casa.exceptions.ObjectNotFoundException;
 import br.com.casa.repositories.PedidoRepository;
+import br.com.casa.services.security.DetalhesDeUsuario;
 
 @Service
 public class PedidoService {
@@ -104,6 +110,25 @@ public class PedidoService {
 		List<Pedido> optional = repo.findAll();
 
 		return optional;
+	}
+
+	/**
+	 * 
+	 *  Encontra o cliente logado e realiza uma busca paginada nos pedidos passando um cliente como argumento
+	 * **/
+	public Page<Pedido> buscaPaginada(Integer pagina, Integer quantidadeLinha, String orderBy, String direction) {
+		DetalhesDeUsuario autenticado = UsuarioService.autenticado();
+		
+		if (autenticado == null) {
+
+			throw new AuthorizationException("Acesso negado");
+		}
+		log.info("Procurando os pedidos do cliente identificador [" + autenticado.getId() + "]");
+		PageRequest pr = PageRequest.of(pagina, quantidadeLinha, Direction.valueOf(direction), orderBy);
+		Cliente cliente = clienteService.buscar(autenticado.getId());
+		log.info("Cliente encontrado " + cliente.getNome());
+		
+		return repo.findByCliente(cliente, pr);
 	}
 
 }

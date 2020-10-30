@@ -10,8 +10,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.amazonaws.AmazonClientException;
+
 import br.com.casa.exceptions.AuthorizationException;
 import br.com.casa.exceptions.DataIntegridadeException;
+import br.com.casa.exceptions.FileException;
 import br.com.casa.exceptions.ObjectNotFoundException;
 import br.com.casa.exceptions.StandardError;
 import br.com.casa.exceptions.ValidationError;
@@ -59,12 +62,12 @@ public class ResourceExceptionHandler {
 	@ExceptionHandler(AccessDeniedException.class)
 	public ResponseEntity<StandardError> acessoNegadoPeril(AccessDeniedException e, HttpServletRequest request) {
 
-		StandardError standardError = new StandardError(HttpStatus.UNAUTHORIZED.value(), "Não possui o perfil de Administrador",
-				System.currentTimeMillis());
+		StandardError standardError = new StandardError(HttpStatus.UNAUTHORIZED.value(),
+				"Não possui o perfil de Administrador", System.currentTimeMillis());
 
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value()).body(standardError);
 	}
-	
+
 	@ExceptionHandler(AuthorizationException.class)
 	public ResponseEntity<StandardError> objectNotFound(AuthorizationException e, HttpServletRequest request) {
 
@@ -74,5 +77,22 @@ public class ResourceExceptionHandler {
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(standardError);
 	}
 
+	@ExceptionHandler(FileException.class)
+	public ResponseEntity<StandardError> file(FileException e, HttpServletRequest request) {
+
+		StandardError standardError = new StandardError(HttpStatus.BAD_REQUEST.value(), e.getMessage(),
+				System.currentTimeMillis());
+
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(standardError);
+	}
+
+	@ExceptionHandler(AmazonClientException.class)
+	public ResponseEntity<StandardError> amazonFile(AmazonClientException e, HttpServletRequest request) {
+//			HttpStatus httpstatus = HttpStatus.valueOf(e.getErrorCode())
+		StandardError standardError = new StandardError(HttpStatus.BAD_REQUEST.value(), e.getMessage(),
+				System.currentTimeMillis());
+
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(standardError);
+	}
 
 }

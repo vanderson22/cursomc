@@ -12,8 +12,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+
+import br.com.casa.exceptions.FileException;
 
 @Service
 public class S3Service {
@@ -40,7 +44,7 @@ public class S3Service {
 			is = localFilePath.getInputStream();
 		} catch (IOException e) {
 			log.error("Ocorreu um erro ao recuperar o arquivo " + e.getStackTrace());
-			throw new RuntimeException("Ocorreu um erro ao recuperar o arquivo");
+			throw new FileException("Ocorreu um erro ao recuperar o arquivo");
 		}
 		String contentType = localFilePath.getContentType();
 
@@ -48,22 +52,25 @@ public class S3Service {
 			return upload(is, originalFilename, contentType);
 		} catch (URISyntaxException e) {
 			log.error("Ocorreu um erro ao recuperar a URI " + e.getStackTrace());
-			throw new RuntimeException("Ocorreu um erro ao recuperar a URI");
+			throw new FileException("Ocorreu um erro ao recuperar a URI");
 		}
 
 	}
 
 	public URI upload(InputStream is, String localFilePath, String contentType) throws URISyntaxException {
 
-		log.info("Iniciando Upload do arquivo " + localFilePath);
-		
-		ObjectMetadata meta = new ObjectMetadata();
-		meta.setContentType(contentType);
-		
-		s3Client.putObject(bucketName, localFilePath, is, meta);
-		log.info("Finalizado Upload do arquivo " + localFilePath);
+		try {
+			log.info("Iniciando Upload do arquivo " + localFilePath);
 
-		return s3Client.getUrl(bucketName, localFilePath).toURI();
+			ObjectMetadata meta = new ObjectMetadata();
+			meta.setContentType(contentType);
 
+			s3Client.putObject(bucketName, localFilePath, is, meta);
+			log.info("Finalizado Upload do arquivo " + localFilePath);
+
+			return s3Client.getUrl(bucketName, localFilePath).toURI();
+		} catch (AmazonS3Exception e) {
+			throw new AmazonServiceException(e.getMessage(), e);
+		}
 	}
 }

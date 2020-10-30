@@ -1,5 +1,6 @@
 package br.com.casa.services;
 
+import java.awt.image.BufferedImage;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -47,6 +49,11 @@ public class ClienteService {
 	private BCryptPasswordEncoder encoder;
 	@Autowired
 	private S3Service s3Service;
+	@Autowired
+	private ImagemService imageService;
+
+	@Value("${s3.prefixo.imagem}")
+	private String prefixo;
 
 	private static final Logger log = LoggerFactory.getLogger(ClienteService.class);
 
@@ -145,15 +152,13 @@ public class ClienteService {
 		Cliente cli = repo.findById(usuario.getId())
 				.orElseThrow(() -> new ObjectNotFoundException("Cliente não encontrado"));
 
-		cli.setImageURL(uri.toString());
+		BufferedImage buf = imageService.recuperaJPG(mp);
 
-		if (cli.getImageURL() == null)
-			throw new RuntimeException("Não foi possível salvar arquivo");
+		log.info(" URL da imagem  [" + uri.toString() + "] Cliente [" + cli.getId() + "]");
+		
+		  String nome =prefixo + ""+ cli.getId() + ".jpg";	
 
-		log.info(" URL da imagem  [" + cli.getImageURL() + "] Cliente [" + cli.getId() + "]");
-		repo.save(cli);
-
-		return uri;
+		return s3Service.upload(imageService.getInputStream(buf, "jpg"), nome, "image");
 	}
 
 	public Cliente criar(Cliente cli) {

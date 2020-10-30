@@ -24,7 +24,6 @@ import br.com.casa.dominio.Cliente;
 import br.com.casa.dominio.DTO.ClienteDTO;
 import br.com.casa.dominio.DTO.ClienteNewDTO;
 import br.com.casa.services.ClienteService;
-import br.com.casa.services.S3Service;
 
 /**
  * Recurso de Cliente

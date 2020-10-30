@@ -47,17 +47,11 @@ public class S3Service {
 			throw new FileException("Ocorreu um erro ao recuperar o arquivo");
 		}
 		String contentType = multipartFile.getContentType();
-
-		try {
-			return upload(is, originalFilename, contentType);
-		} catch (URISyntaxException e) {
-			log.error("Ocorreu um erro ao recuperar a URI " + e.getStackTrace());
-			throw new FileException("Ocorreu um erro ao recuperar a URI");
-		}
+		return upload(is, originalFilename, contentType);
 
 	}
 
-	public URI upload(InputStream is, String originalName, String contentType) throws URISyntaxException {
+	public URI upload(InputStream is, String originalName, String contentType) {
 
 		try {
 			log.info("Iniciando Upload do arquivo " + originalName);
@@ -71,6 +65,10 @@ public class S3Service {
 			URI uri = s3Client.getUrl(bucketName, originalName).toURI();
 			log.info(uri.toString());
 			return uri;
+		} catch (URISyntaxException e) {
+			log.error(e.getStackTrace().toString());
+			throw new RuntimeException("Erro na sintaxe da URI " + e.getMessage());
+
 		} catch (AmazonS3Exception e) {
 			throw new AmazonServiceException(e.getMessage(), e);
 		}

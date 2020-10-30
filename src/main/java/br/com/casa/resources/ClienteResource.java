@@ -17,12 +17,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.casa.dominio.Cliente;
 import br.com.casa.dominio.DTO.ClienteDTO;
 import br.com.casa.dominio.DTO.ClienteNewDTO;
 import br.com.casa.services.ClienteService;
+import br.com.casa.services.S3Service;
 
 /**
  * Recurso de Cliente
@@ -35,6 +37,8 @@ import br.com.casa.services.ClienteService;
 public class ClienteResource {
 	@Autowired
 	private ClienteService catService;
+	@Autowired
+	private S3Service s3Service;
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> buscar(@PathVariable Integer id) {
@@ -97,4 +101,11 @@ public class ClienteResource {
 		return ResponseEntity.created(uri).build();
 	}
 
+	@RequestMapping(value = "/upload", method = RequestMethod.POST)
+	public ResponseEntity<Void> upload(@RequestParam(name = "arquivo") MultipartFile arquivo) {
+
+		URI uri = s3Service.upload(arquivo);
+
+		return ResponseEntity.created(uri).build();
+	}
 }

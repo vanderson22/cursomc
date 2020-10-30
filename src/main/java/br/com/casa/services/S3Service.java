@@ -1,17 +1,19 @@
 package br.com.casa.services;
 
-import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.amazonaws.AmazonClientException;
-import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 
 @Service
 public class S3Service {
@@ -26,21 +28,42 @@ public class S3Service {
 	/**
 	 * 
 	 * Realiza o upload do arquivo para o Amazon S3
+	 * 
+	 * @throws IOException
+	 * @throws URISyntaxException
 	 */
-	public void upload(String localFilePath) {
+	public URI upload(MultipartFile localFilePath) {
+
+		String originalFilename = localFilePath.getOriginalFilename();
+		InputStream is = null;
+		try {
+			is = localFilePath.getInputStream();
+		} catch (IOException e) {
+			log.error("Ocorreu um erro ao recuperar o arquivo " + e.getStackTrace());
+			throw new RuntimeException("Ocorreu um erro ao recuperar o arquivo");
+		}
+		String contentType = localFilePath.getContentType();
 
 		try {
-			File file = new File(localFilePath);
-			log.info("Iniciando Upload do arquivo " + localFilePath);
-			PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, "teste.csv", file);
-			s3Client.putObject(putObjectRequest);
-			log.info("Finalizado Upload do arquivo " + localFilePath);
-		} catch (AmazonServiceException e) {
-			log.error(
-					"Ocorreu Erro ao enviar o arquivo  MSG [" + e.getMessage() + "] - Code [" + e.getErrorCode() + "]");
-		} catch (AmazonClientException e) {
-			log.error("Ocorreu Erro ao enviar o arquivo  MSG [" + e.getMessage() + "] - Cause [" + e.getCause() + "]");
+			return upload(is, originalFilename, contentType);
+		} catch (URISyntaxException e) {
+			log.error("Ocorreu um erro ao recuperar a URI " + e.getStackTrace());
+			throw new RuntimeException("Ocorreu um erro ao recuperar a URI");
 		}
+
+	}
+
+	public URI upload(InputStream is, String localFilePath, String contentType) throws URISyntaxException {
+
+		log.info("Iniciando Upload do arquivo " + localFilePath);
+		
+		ObjectMetadata meta = new ObjectMetadata();
+		meta.setContentType(contentType);
+		
+		s3Client.putObject(bucketName, localFilePath, is, meta);
+		log.info("Finalizado Upload do arquivo " + localFilePath);
+
+		return s3Client.getUrl(bucketName, localFilePath).toURI();
 
 	}
 }

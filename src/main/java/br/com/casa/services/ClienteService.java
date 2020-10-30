@@ -1,5 +1,8 @@
 package br.com.casa.services;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import br.com.casa.dominio.Cidade;
 import br.com.casa.dominio.Cliente;
@@ -37,18 +41,22 @@ public class ClienteService {
 
 	@Autowired
 	private EnderecoRepository enderecoRepo;
-	
+
 	@Autowired
 	private BCryptPasswordEncoder encoder;
+	@Autowired
+	private S3Service s3Service;
 
 	public Cliente buscar(Integer id) throws ObjectNotFoundException {
-        // o cliente só pode buscar a si próprio, porém o perfil administrativo pode buscar qualquer id
-		   DetalhesDeUsuario autenticado = UsuarioService.autenticado();
-		    if(autenticado == null || ! autenticado.hasHole(Perfil.ADMIN) && !id.equals(autenticado.getId())) {
-		    	
-		    	throw new AuthorizationException("Usuário não possui o perfil de administrador e não pode consultar outros usuários");
-		    }
-		
+		// o cliente só pode buscar a si próprio, porém o perfil administrativo pode
+		// buscar qualquer id
+		DetalhesDeUsuario autenticado = UsuarioService.autenticado();
+		if (autenticado == null || !autenticado.hasHole(Perfil.ADMIN) && !id.equals(autenticado.getId())) {
+
+			throw new AuthorizationException(
+					"Usuário não possui o perfil de administrador e não pode consultar outros usuários");
+		}
+
 		Optional<Cliente> optional = repo.findById(id);
 
 		return optional.orElseThrow(
@@ -95,8 +103,7 @@ public class ClienteService {
 
 	public Cliente fromDTO(ClienteDTO dto) {
 
-		return new Cliente(dto.getId(), dto.getNome(), dto.getEmail(), null, null)
-				.senha(null);
+		return new Cliente(dto.getId(), dto.getNome(), dto.getEmail(), null, null).senha(null);
 	}
 
 //	@Transactional
@@ -104,8 +111,7 @@ public class ClienteService {
 	public Cliente fromDTO(ClienteNewDTO clienteNEW) {
 
 		Cliente cliente = new Cliente(null, clienteNEW.getNome(), clienteNEW.getEmail(), clienteNEW.getCpfCnpj(),
-				TipoCliente.toEnum(clienteNEW.getTipo()))
-				                  .senha(encoder.encode(clienteNEW.getSenha()));
+				TipoCliente.toEnum(clienteNEW.getTipo())).senha(encoder.encode(clienteNEW.getSenha()));
 
 		Cidade cidade = cidadeRepo.findById(clienteNEW.getCidadeId()).orElseThrow(() -> new ObjectNotFoundException(
 				"Cidade não encontrada  - identificador :[" + clienteNEW.getCidadeId() + "]"));
@@ -119,6 +125,10 @@ public class ClienteService {
 				.forEach(tel -> cliente.getTelefones().add(tel));
 
 		return cliente;
+	}
+
+	public URI uploadProfilePicture(MultipartFile mp) throws IOException, URISyntaxException {
+		return s3Service.upload(mp);
 	}
 
 	public Cliente criar(Cliente cli) {

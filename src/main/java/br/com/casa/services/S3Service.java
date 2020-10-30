@@ -22,7 +22,7 @@ import br.com.casa.exceptions.FileException;
 @Service
 public class S3Service {
 
-	private Logger log = LoggerFactory.getLogger(S3Service.class);
+	private static final Logger log = LoggerFactory.getLogger(S3Service.class);
 	@Autowired
 	private AmazonS3 s3Client;
 
@@ -36,17 +36,17 @@ public class S3Service {
 	 * @throws IOException
 	 * @throws URISyntaxException
 	 */
-	public URI upload(MultipartFile localFilePath) {
+	public URI upload(MultipartFile multipartFile) {
 
-		String originalFilename = localFilePath.getOriginalFilename();
+		String originalFilename = multipartFile.getOriginalFilename();
 		InputStream is = null;
 		try {
-			is = localFilePath.getInputStream();
+			is = multipartFile.getInputStream();
 		} catch (IOException e) {
 			log.error("Ocorreu um erro ao recuperar o arquivo " + e.getStackTrace());
 			throw new FileException("Ocorreu um erro ao recuperar o arquivo");
 		}
-		String contentType = localFilePath.getContentType();
+		String contentType = multipartFile.getContentType();
 
 		try {
 			return upload(is, originalFilename, contentType);
@@ -57,18 +57,20 @@ public class S3Service {
 
 	}
 
-	public URI upload(InputStream is, String localFilePath, String contentType) throws URISyntaxException {
+	public URI upload(InputStream is, String originalName, String contentType) throws URISyntaxException {
 
 		try {
-			log.info("Iniciando Upload do arquivo " + localFilePath);
+			log.info("Iniciando Upload do arquivo " + originalName);
 
 			ObjectMetadata meta = new ObjectMetadata();
 			meta.setContentType(contentType);
 
-			s3Client.putObject(bucketName, localFilePath, is, meta);
-			log.info("Finalizado Upload do arquivo " + localFilePath);
+			s3Client.putObject(bucketName, originalName, is, meta);
+			log.info("Finalizado Upload do arquivo " + originalName);
 
-			return s3Client.getUrl(bucketName, localFilePath).toURI();
+			URI uri = s3Client.getUrl(bucketName, originalName).toURI();
+			log.info(uri.toString());
+			return uri;
 		} catch (AmazonS3Exception e) {
 			throw new AmazonServiceException(e.getMessage(), e);
 		}

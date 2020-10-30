@@ -1,12 +1,12 @@
 package br.com.casa.services;
 
-import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -30,6 +30,7 @@ import br.com.casa.repositories.CidadeRepository;
 import br.com.casa.repositories.ClienteRepository;
 import br.com.casa.repositories.EnderecoRepository;
 import br.com.casa.services.security.DetalhesDeUsuario;
+import javassist.NotFoundException;
 
 @Service
 public class ClienteService {
@@ -46,6 +47,8 @@ public class ClienteService {
 	private BCryptPasswordEncoder encoder;
 	@Autowired
 	private S3Service s3Service;
+
+	private static final Logger log = LoggerFactory.getLogger(ClienteService.class);
 
 	public Cliente buscar(Integer id) throws ObjectNotFoundException {
 		// o cliente só pode buscar a si próprio, porém o perfil administrativo pode
@@ -127,8 +130,30 @@ public class ClienteService {
 		return cliente;
 	}
 
-	public URI uploadProfilePicture(MultipartFile mp) throws IOException, URISyntaxException {
-		return s3Service.upload(mp);
+	/**
+	 * Salva a URL no cliente e enviar a imagem
+	 * 
+	 * @throws NotFoundException
+	 * 
+	 **/
+	public URI uploadProfilePicture(MultipartFile mp) {
+		DetalhesDeUsuario usuario = UsuarioService.autenticado();
+		if (usuario == null)
+			throw new AuthorizationException("Acesso Negado");
+
+		URI uri = s3Service.upload(mp);
+		Cliente cli = repo.findById(usuario.getId())
+				.orElseThrow(() -> new ObjectNotFoundException("Cliente não encontrado"));
+
+		cli.setImageURL(uri.toString());
+
+		if (cli.getImageURL() == null)
+			throw new RuntimeException("Não foi possível salvar arquivo");
+
+		log.info(" URL da imagem  [" + cli.getImageURL() + "] Cliente [" + cli.getId() + "]");
+		repo.save(cli);
+
+		return uri;
 	}
 
 	public Cliente criar(Cliente cli) {

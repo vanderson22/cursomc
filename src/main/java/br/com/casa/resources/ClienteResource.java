@@ -36,20 +36,18 @@ import br.com.casa.services.S3Service;
 @RequestMapping(value = "/clientes")
 public class ClienteResource {
 	@Autowired
-	private ClienteService catService;
-	@Autowired
-	private S3Service s3Service;
+	private ClienteService clienteService;
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> buscar(@PathVariable Integer id) {
 		// Handler para interceptar erros
-		return ResponseEntity.ok().body(catService.buscar(id));
+		return ResponseEntity.ok().body(clienteService.buscar(id));
 	}
 
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<List<ClienteDTO>> buscarTodos() {
-		List<Cliente> buscarTodos = catService.buscarTodos();
+		List<Cliente> buscarTodos = clienteService.buscarTodos();
 		List<ClienteDTO> listaDTO = new ArrayList<ClienteDTO>();
 
 		buscarTodos.forEach(cat -> listaDTO.add(new ClienteDTO(cat)));
@@ -65,7 +63,7 @@ public class ClienteResource {
 			@RequestParam(value = "orderBy", defaultValue = "nome") String orderBy,
 			@RequestParam(value = "ascendeteOuDescente", defaultValue = "ASC") String direction) {
 
-		Page<Cliente> page = catService.buscaPaginada(pagina, quantidadeLinha, orderBy, direction);
+		Page<Cliente> page = clienteService.buscaPaginada(pagina, quantidadeLinha, orderBy, direction);
 		Page<ClienteDTO> listaDTO = page.map(obj -> new ClienteDTO(obj));
 
 		return ResponseEntity.ok().body(listaDTO);
@@ -78,7 +76,7 @@ public class ClienteResource {
 	// Validator
 	public ResponseEntity<Void> atualizar(@PathVariable Integer id, @Valid @RequestBody ClienteDTO clienteDTO) {
 		clienteDTO.setId(id);
-		catService.update(catService.fromDTO(clienteDTO));
+		clienteService.update(clienteService.fromDTO(clienteDTO));
 
 		return ResponseEntity.noContent().build();
 	}
@@ -87,7 +85,7 @@ public class ClienteResource {
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<Void> atualizar(@PathVariable Integer id) throws URISyntaxException {
 
-		catService.deletar(id);
+		clienteService.deletar(id);
 
 		return ResponseEntity.noContent().build();
 	}
@@ -95,7 +93,7 @@ public class ClienteResource {
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<Void> criar(@Valid @RequestBody ClienteNewDTO clienteNEW) throws URISyntaxException {
 		// Para validar
-		Cliente cliente = catService.criar(catService.fromDTO(clienteNEW));
+		Cliente cliente = clienteService.criar(clienteService.fromDTO(clienteNEW));
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(cliente.getId())
 				.toUri();
 		return ResponseEntity.created(uri).build();
@@ -104,7 +102,7 @@ public class ClienteResource {
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	public ResponseEntity<Void> upload(@RequestParam(name = "arquivo") MultipartFile arquivo) {
 
-		URI uri = s3Service.upload(arquivo);
+		URI uri = clienteService.uploadProfilePicture(arquivo);
 
 		return ResponseEntity.created(uri).build();
 	}

@@ -24,17 +24,18 @@ import br.com.casa.services.security.JwtAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true) // pre autoriza certos perfis  EXEMPLO : @PreAuthorize("hasAnyrole('ADMIN')") NOS resources
+@EnableGlobalMethodSecurity(prePostEnabled = true) // pre autoriza certos perfis EXEMPLO :
+													// @PreAuthorize("hasAnyrole('ADMIN')") NOS resources
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	// para liberar o h2
 	@SuppressWarnings("unused")
 	@Autowired
 	private Environment env;
-	
+
 	// vai reconhecer automaticamente a unica classe que implementa essa interface
 	// DetalhesUsuarioServiceImpl
-	@Autowired 
+	@Autowired
 	private UserDetailsService userDetail;
 
 	@Autowired
@@ -46,21 +47,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	 **/
 	private static final String[] PUBLIC_MATCHERS = { "/h2-console/**", "/h2/**", };
 
-	private static final String[] PUBLIC_MATCHERS_GET = { "/categorias/**", "/produtos/**"};
-	private static final String[] PUBLIC_MATCHERS_POST = { "/clientes/**" ,  "/clientes/upload" };
-
+	private static final String[] PUBLIC_MATCHERS_GET = { "/categorias/**", "/produtos/**" };
+	private static final String[] PUBLIC_MATCHERS_POST = { "/clientes" };
 
 	/**
-	 *  Esse cara vai ser capaz de buscar o usuário pelo e-mail usando o userDetail informado
-	 * @throws Exception 
+	 * Esse cara vai ser capaz de buscar o usuário pelo e-mail usando o userDetail
+	 * informado
 	 * 
-	 * ***/
+	 * @throws Exception
+	 * 
+	 ***/
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
-		auth
-		   .userDetailsService(userDetail)
-		   .passwordEncoder(criarBCrypt());
+		auth.userDetailsService(userDetail).passwordEncoder(criarBCrypt());
 	}
 
 	/**
@@ -70,25 +70,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		System.out.println("Starting webSecurity configure");
-		
-		
+
 		// Liberar os frames do h2, mesmo com as urls liberadas os frames são
 		// bloqueados.
 		http.headers().frameOptions().disable();
 
-		http.cors()
-		     .and()
-		     .csrf()
-		     .disable()
-		     .authorizeRequests()
-		     .antMatchers(PUBLIC_MATCHERS).permitAll()
-			 .antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
-			 .antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
-			 .anyRequest().authenticated();
-		http .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtUtil )) ;// registrar o filtro de authenticação
-        http .addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetail)); // registra o filtro de authorização
-				// this disables session creation on Spring Security
-        http .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		http.cors().and().csrf().disable().authorizeRequests().antMatchers(PUBLIC_MATCHERS).permitAll()
+				.antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
+				.antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll().anyRequest().authenticated();
+		http.addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtUtil));// registrar o filtro de
+																						// authenticação
+		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetail)); // registra o filtro
+																									// de authorização
+		// this disables session creation on Spring Security
+		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 	}
 

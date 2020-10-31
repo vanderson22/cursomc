@@ -44,7 +44,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
 		String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-		log.info("header " + header);
+		log.info("Recuperando header da requisição [" + header + "]");
 		if (header != null && header.startsWith("Bearer ")) {
 			UsernamePasswordAuthenticationToken auth = getAuthentication(request, header);
 			// liberar autorização

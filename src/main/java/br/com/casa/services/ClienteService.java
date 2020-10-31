@@ -74,6 +74,25 @@ public class ClienteService {
 
 	}
 
+	/**
+	 * Realiza a busca no repositório pelo e-mail do usuário, Verifica se o usuário
+	 * autenticado é o usuário informado no e-mail
+	 ***/
+	public Cliente buscarPorEmail(String email) {
+		DetalhesDeUsuario autenticado = UsuarioService.autenticado();
+		if (autenticado == null || !autenticado.hasHole(Perfil.ADMIN) && !email.equals(autenticado.getUsername())) {
+
+			throw new AuthorizationException(
+					"Usuário não possui o perfil de administrador e não pode consultar outros usuários");
+		}
+		// aqui precisa ser em inglês
+		Cliente cliente = repo.findByEmail(email);
+		if (cliente == null)
+			throw new ObjectNotFoundException("Cliente não encontrado [" + email + "]");
+
+		return cliente;
+	}
+
 	public Cliente update(Cliente cliUpdate) {
 		Cliente cliente = buscar(cliUpdate.getId());
 		// Desta forma pois no DTO - RGN só podemos informar nome e email, e eles são
@@ -155,8 +174,8 @@ public class ClienteService {
 		BufferedImage buf = imageService.recuperaJPG(mp);
 
 		log.info(" URL da imagem  [" + uri.toString() + "] Cliente [" + cli.getId() + "]");
-		
-		  String nome =prefixo + ""+ cli.getId() + ".jpg";	
+
+		String nome = prefixo + "" + cli.getId() + ".jpg";
 
 		return s3Service.upload(imageService.getInputStream(buf, "jpg"), nome, "image");
 	}

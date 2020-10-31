@@ -38,9 +38,15 @@ public class ClienteResource {
 	private ClienteService clienteService;
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ResponseEntity<?> buscar(@PathVariable Integer id) {
-		// Handler para interceptar erros
+	public ResponseEntity<Cliente> buscar(@PathVariable Integer id) {
 		return ResponseEntity.ok().body(clienteService.buscar(id));
+	}
+
+	@RequestMapping(value = "/email", method = RequestMethod.GET)
+	public ResponseEntity<Cliente> buscar(
+			@RequestParam(value = "email", required = true, name = "email") String email) {
+
+		return ResponseEntity.ok().body(clienteService.buscarPorEmail(email));
 	}
 
 	@PreAuthorize("hasAnyRole('ADMIN')")

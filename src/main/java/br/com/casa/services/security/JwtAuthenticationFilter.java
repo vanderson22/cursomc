@@ -95,5 +95,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
 		log.trace("Token criado [" + token + "]");
 		response.addHeader("Authorization", "Bearer " + token);
+
+		//para conseguir expor header custom 
+		response.addHeader("access-control-expose-headers", "Authorization");
 	}
 }

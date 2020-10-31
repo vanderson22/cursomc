@@ -65,7 +65,7 @@ public class DevInstantiateDB {
 
 	@Autowired
 	private ItemRepository itemRepo;
-	
+
 	@Autowired
 	private BCryptPasswordEncoder pe;
 
@@ -121,25 +121,25 @@ public class DevInstantiateDB {
 		Estado e2 = new Estado(null, "São Paulo");
 
 		Cidade cid1 = new Cidade(null, "Uberlândia", e1);
+		Cidade cid1_2 = new Cidade(null, "Jardim Mineiro", e1);
+		Cidade cid1_3 = new Cidade(null, "Belo Horizonte", e1);
 		Cidade cid2 = new Cidade(null, "Santos", e2);
 		Cidade cid3 = new Cidade(null, "Campinas", e2);
 
-		e1.getCidades().addAll(Arrays.asList(cid1));
+		e1.getCidades().addAll(Arrays.asList(cid1, cid1_2, cid1_3));
 		e2.getCidades().addAll(Arrays.asList(cid2, cid3));
 
 		estadoRepo.saveAll(Arrays.asList(e1, e2));
 		cidadeRepo.saveAll(Arrays.asList(cid1, cid2, cid3));
 
 		Cliente cli1 = new Cliente(null, "Vanderson nogueira", "vanderson.01@hotmail.com", "003.153.160-00",
-				TipoCliente.PESSOAFISICA)
-				.senha(pe.encode("12345"));
-		
+				TipoCliente.PESSOAFISICA).senha(pe.encode("12345"));
+
 		cli1.getTelefones().addAll(Arrays.asList("222-3333", "323-4544"));
 		Cliente cli2 = new Cliente(null, "Joana silva", "joana.silva@mail.com", "003.153.160-00",
-				TipoCliente.PESSOAFISICA)
-				.senha(pe.encode("54321"));
+				TipoCliente.PESSOAFISICA).senha(pe.encode("54321"));
 //		 Também é um admin
-				cli2.setPerfis(Perfil.ADMIN);
+		cli2.setPerfis(Perfil.ADMIN);
 
 		cli2.getTelefones().addAll(Arrays.asList("222-3333", "323-4544"));
 

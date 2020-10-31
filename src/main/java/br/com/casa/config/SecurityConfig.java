@@ -45,7 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	 * urls liberadas
 	 * 
 	 **/
-	private static final String[] PUBLIC_MATCHERS = { "/h2-console/**", "/h2/**", };
+	private static final String[] PUBLIC_MATCHERS = { "/h2-console/**", "/h2/**", "/estados/**" , "/cidades/**" };
 
 	private static final String[] PUBLIC_MATCHERS_GET = { "/categorias/**", "/produtos/**" };
 	private static final String[] PUBLIC_MATCHERS_POST = { "/clientes" };
@@ -100,7 +100,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	/**
 	 * Cria um componente encoder na memoria para autowired
-	 * 
+	 * para codificar o password
 	 **/
 	@Bean
 	public BCryptPasswordEncoder criarBCrypt() {

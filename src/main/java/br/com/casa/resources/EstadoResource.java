@@ -54,6 +54,7 @@ public class EstadoResource {
 	public ResponseEntity<List<EstadoDTO>> buscarEstado(@PathVariable(value = "estado_id") Integer estadoId) {
 		log.info("Iniciada requisição para buscar o estado [" + estadoId + "]");
 
+		// não precisava dar new Estado poderia buscar por @Query
 		List<Cidade> list = cidadeService.buscarCidadePorEstado(new Estado(estadoId, null));
 
 		if (list == null)

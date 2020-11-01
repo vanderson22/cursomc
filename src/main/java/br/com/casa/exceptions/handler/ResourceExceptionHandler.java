@@ -18,6 +18,7 @@ import br.com.casa.exceptions.FileException;
 import br.com.casa.exceptions.ObjectNotFoundException;
 import br.com.casa.exceptions.StandardError;
 import br.com.casa.exceptions.ValidationError;
+import io.jsonwebtoken.ExpiredJwtException;
 
 /**** INTERCEPTA ERROS ***/
 @ControllerAdvice
@@ -30,8 +31,8 @@ public class ResourceExceptionHandler {
 	@ExceptionHandler(ObjectNotFoundException.class)
 	public ResponseEntity<StandardError> objectNotFound(ObjectNotFoundException e, HttpServletRequest request) {
 
-		StandardError standardError = new StandardError(HttpStatus.NOT_FOUND.value(), e.getMessage(),
-				System.currentTimeMillis());
+		StandardError standardError = new StandardError(System.currentTimeMillis(), HttpStatus.NOT_FOUND.value(),
+				"Not Found", e.getMessage(), request.getRequestURI().toString());
 
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(standardError);
 	}
@@ -39,8 +40,8 @@ public class ResourceExceptionHandler {
 	@ExceptionHandler(DataIntegridadeException.class)
 	public ResponseEntity<StandardError> integridadeDados(DataIntegridadeException e, HttpServletRequest request) {
 
-		StandardError standardError = new StandardError(HttpStatus.BAD_REQUEST.value(), e.getMessage(),
-				System.currentTimeMillis());
+		StandardError standardError = new StandardError(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(),
+				"Integridade de Dados", e.getMessage(), request.getRequestURI().toString());
 
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(standardError);
 	}
@@ -49,21 +50,22 @@ public class ResourceExceptionHandler {
 	public ResponseEntity<StandardError> integridadeDadosBeanValidation(MethodArgumentNotValidException e,
 			HttpServletRequest request) {
 
-		ValidationError standardError = new ValidationError(HttpStatus.BAD_REQUEST.value(), "Erro De Validação",
-				System.currentTimeMillis());
+		ValidationError standardError = new ValidationError(System.currentTimeMillis(),
+				HttpStatus.UNPROCESSABLE_ENTITY.value(), "Erro de Validação", e.getMessage(),
+				request.getRequestURI().toString());
 
 		for (FieldError x : e.getBindingResult().getFieldErrors()) {
 			standardError.setLista(x.getField(), x.getDefaultMessage());
 		}
 
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(standardError);
+		return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(standardError);
 	}
 
 	@ExceptionHandler(AccessDeniedException.class)
 	public ResponseEntity<StandardError> acessoNegadoPeril(AccessDeniedException e, HttpServletRequest request) {
 
-		StandardError standardError = new StandardError(HttpStatus.UNAUTHORIZED.value(),
-				"Não possui o perfil de Administrador", System.currentTimeMillis());
+		StandardError standardError = new StandardError(System.currentTimeMillis(), HttpStatus.UNAUTHORIZED.value(),
+				"Acesso negado", e.getMessage(), request.getRequestURI().toString());
 
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value()).body(standardError);
 	}
@@ -71,8 +73,8 @@ public class ResourceExceptionHandler {
 	@ExceptionHandler(AuthorizationException.class)
 	public ResponseEntity<StandardError> objectNotFound(AuthorizationException e, HttpServletRequest request) {
 
-		StandardError standardError = new StandardError(HttpStatus.UNAUTHORIZED.value(), e.getMessage(),
-				System.currentTimeMillis());
+		StandardError standardError = new StandardError(System.currentTimeMillis(), HttpStatus.UNAUTHORIZED.value(),
+				"Acesso negado", e.getMessage(), request.getRequestURI().toString());
 
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(standardError);
 	}
@@ -80,8 +82,8 @@ public class ResourceExceptionHandler {
 	@ExceptionHandler(FileException.class)
 	public ResponseEntity<StandardError> file(FileException e, HttpServletRequest request) {
 
-		StandardError standardError = new StandardError(HttpStatus.BAD_REQUEST.value(), e.getMessage(),
-				System.currentTimeMillis());
+		StandardError standardError = new StandardError(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(),
+				"Erro no arquivo", e.getMessage(), request.getRequestURI().toString());
 
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(standardError);
 	}
@@ -89,9 +91,16 @@ public class ResourceExceptionHandler {
 	@ExceptionHandler(AmazonClientException.class)
 	public ResponseEntity<StandardError> amazonFile(AmazonClientException e, HttpServletRequest request) {
 //			HttpStatus httpstatus = HttpStatus.valueOf(e.getErrorCode())
-		StandardError standardError = new StandardError(HttpStatus.BAD_REQUEST.value(), e.getMessage(),
-				System.currentTimeMillis());
+		StandardError standardError = new StandardError(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(),
+				"Erro na integração com a Amazon", e.getMessage(), request.getRequestURI().toString());
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(standardError);
+	}
 
+	@ExceptionHandler(ExpiredJwtException.class)
+	public ResponseEntity<StandardError> amazonFile(ExpiredJwtException e, HttpServletRequest request) {
+//			HttpStatus httpstatus = HttpStatus.valueOf(e.getErrorCode())
+		StandardError standardError = new StandardError(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(),
+				"token expirado", e.getMessage(), request.getRequestURI().toString());
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(standardError);
 	}
 

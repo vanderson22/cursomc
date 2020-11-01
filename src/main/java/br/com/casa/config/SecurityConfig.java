@@ -1,6 +1,8 @@
 
 package br.com.casa.config;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,7 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	 * urls liberadas
 	 * 
 	 **/
-	private static final String[] PUBLIC_MATCHERS = { "/h2-console/**", "/h2/**", "/estados/**" , "/cidades/**" };
+	private static final String[] PUBLIC_MATCHERS = { "/h2-console/**", "/h2/**", "/estados/**", "/cidades/**" };
 
 	private static final String[] PUBLIC_MATCHERS_GET = { "/categorias/**", "/produtos/**" };
 	private static final String[] PUBLIC_MATCHERS_POST = { "/clientes" };
@@ -94,13 +96,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
 		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+
+		CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
+		corsConfiguration.setAllowedMethods(Arrays.asList("GET", "PUT", "POST", "DELETE", "OPTIONS"));
+		source.registerCorsConfiguration("/**", corsConfiguration);
 		return source;
 	}
 
 	/**
-	 * Cria um componente encoder na memoria para autowired
-	 * para codificar o password
+	 * Cria um componente encoder na memoria para autowired para codificar o
+	 * password
 	 **/
 	@Bean
 	public BCryptPasswordEncoder criarBCrypt() {

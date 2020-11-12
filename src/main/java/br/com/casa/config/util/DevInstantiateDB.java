@@ -83,8 +83,8 @@ public class DevInstantiateDB {
 		Categoria c5 = new Categoria(null, "Armarinho");
 		Categoria c6 = new Categoria(null, "GAME");
 		Categoria c7 = new Categoria(null, "TV");
-		Categoria c8 = new Categoria(null, "Cozinha");
-		Categoria c9 = new Categoria(null, "Construção");
+//		Categoria c8 = new Categoria(null, "Cozinha");
+//		Categoria c9 = new Categoria(null, "Construção");
 
 		Produto p1 = new Produto(null, "Computador", 2000.0);
 		Produto p2 = new Produto(null, "Impressora", 300.0);
@@ -184,20 +184,20 @@ public class DevInstantiateDB {
 		cat1.getProdutos().addAll(Arrays.asList(p1, p2, p3));
 		c2.getProdutos().addAll(Arrays.asList(p2));
 		c4.getProdutos().addAll(Arrays.asList(p6, p11));
-		c8.getProdutos().addAll(Arrays.asList(p3));
+//		c8.getProdutos().addAll(Arrays.asList(p3));
 		c7.getProdutos().addAll(Arrays.asList(p7));
 		c5.getProdutos().addAll(Arrays.asList(p5));
 		c4.getProdutos().addAll(Arrays.asList(p4));
 
 		p1.getCategorias().addAll(Arrays.asList(cat1));
 		p2.getCategorias().addAll(Arrays.asList(cat1, c2));
-		p3.getCategorias().addAll(Arrays.asList(cat1, c8));
+//		p3.getCategorias().addAll(Arrays.asList(cat1, c8));
 		p6.getCategorias().addAll(Arrays.asList(c6));
 		p5.getCategorias().addAll(Arrays.asList(c5));
 		p4.getCategorias().addAll(Arrays.asList(c4));
 		p7.getCategorias().addAll(Arrays.asList(c7));
 
-		repo.saveAll(Arrays.asList(cat1, c2, c3, c4, c5, c6, c7, c8, c9));
+		repo.saveAll(Arrays.asList(cat1, c2, c3, c4, c5, c6, c7));
 
 		pRepo.saveAll(Arrays.asList(p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26, p27, p28,
 				p29, p30, p31, p32, p34, p35, p36, p37, p38, p39, p40, p41, p42, p43, p44, p45, p46, p47, p48, p49,
@@ -223,10 +223,15 @@ public class DevInstantiateDB {
 				TipoCliente.PESSOAFISICA).senha(pe.encode("12345"));
 
 		cli1.getTelefones().addAll(Arrays.asList("222-3333", "323-4544"));
-		Cliente cli2 = new Cliente(null, "Joana silva", "joana.silva@mail.com", "003.153.160-00",
+		Cliente cli2 = new Cliente(null, "Joana silva", "joana.silva@mail.com", "003.153.160-55",
 				TipoCliente.PESSOAFISICA).senha(pe.encode("54321"));
 //		 Também é um admin
 		cli2.setPerfis(Perfil.ADMIN);
+		
+		Cliente cli3 = new Cliente(null, "system User", "sys@mail.com", "003.153.160-11",
+				TipoCliente.PESSOAFISICA).senha(pe.encode("123"));
+//		 Também é um admin
+		cli3.setPerfis(Perfil.ADMIN);
 
 		cli2.getTelefones().addAll(Arrays.asList("222-3333", "323-4544"));
 
@@ -237,7 +242,7 @@ public class DevInstantiateDB {
 		cli1.getEnderecos().addAll(Arrays.asList(end1, end2));
 
 		// SALVAR SEMPRE OS INDEPENDENTES PRIMEIRO EX: CLIENTE
-		cliRepo.saveAll(Arrays.asList(cli1, cli2));
+		cliRepo.saveAll(Arrays.asList(cli1, cli2, cli3));
 		endRepo.saveAll(Arrays.asList(end1, end2));
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");

@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.casa.dominio.DTO.CredenciaisDTO;
+import br.com.casa.exceptions.handler.JWTAuthenticationFailureHandler;
 
 /**
  * 
@@ -35,10 +36,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
 	/**
 	 * injeção das propriedades pelo construtor
-	 * 
+	 *  super.setAuthe.... essa parte é importante para lançar 
+	 *  código 401 quando ocorrer uma falha na autenticação
 	 */
 	public JwtAuthenticationFilter(AuthenticationManager authManager, JWTUtil jwtUtil) {
-		super();
+        super.setAuthenticationFailureHandler(new JWTAuthenticationFailureHandler()); 
+
 		this.authManager = authManager;
 		this.jwtUtil = jwtUtil;
 	}

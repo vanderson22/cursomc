@@ -88,7 +88,7 @@ public class ClienteResource {
 
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<Void> atualizar(@PathVariable Integer id) throws URISyntaxException {
+	public ResponseEntity<Void> deletar(@PathVariable Integer id) throws URISyntaxException {
 
 		clienteService.deletar(id);
 
@@ -104,6 +104,11 @@ public class ClienteResource {
 		return ResponseEntity.created(uri).build();
 	}
 
+	
+	/***
+	 *  Faz upload da imagem com seguinte formato : 
+	 *     cp'id'.jpg
+	 * */
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	public ResponseEntity<Void> upload(@RequestParam(name = "arquivo") MultipartFile arquivo) {
 

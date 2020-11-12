@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.amazonaws.AmazonClientException;
 
+import br.com.casa.exceptions.AuthenticationHomeException;
 import br.com.casa.exceptions.AuthorizationException;
 import br.com.casa.exceptions.DataIntegridadeException;
 import br.com.casa.exceptions.FileException;
@@ -72,6 +73,14 @@ public class ResourceExceptionHandler {
 
 	@ExceptionHandler(AuthorizationException.class)
 	public ResponseEntity<StandardError> objectNotFound(AuthorizationException e, HttpServletRequest request) {
+
+		StandardError standardError = new StandardError(System.currentTimeMillis(), HttpStatus.UNAUTHORIZED.value(),
+				"Acesso negado", e.getMessage(), request.getRequestURI().toString());
+
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(standardError);
+	}
+	@ExceptionHandler(AuthenticationHomeException.class)
+	public ResponseEntity<StandardError> objectNotFound(AuthenticationHomeException e, HttpServletRequest request) {
 
 		StandardError standardError = new StandardError(System.currentTimeMillis(), HttpStatus.UNAUTHORIZED.value(),
 				"Acesso negado", e.getMessage(), request.getRequestURI().toString());

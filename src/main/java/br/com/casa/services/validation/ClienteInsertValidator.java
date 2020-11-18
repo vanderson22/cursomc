@@ -44,14 +44,28 @@ public class ClienteInsertValidator implements ConstraintValidator<ClienteInsert
 			list.add(new FieldMessage("nome", "Nome não pode ser nulo"));
 		}
 
-		if (objDTO.getTipo().equals(TipoCliente.PESSOAFISICA.getCodigo()) && BR.isValidCPF(objDTO.getCpfCnpj())) {
+		if (objDTO.getTipo() == null) {
 
-			list.add(new FieldMessage("cpfCnpj", "CPF inválido - Informar com máscara 000.000.000-00"));
-		}
+			list.add(new FieldMessage("tipo", "Informar o tipo da pessoa!"));
+		} else {
+			if (objDTO.getCpfCnpj() == null) {
 
-		if (objDTO.getTipo().equals(TipoCliente.PESSOAJURIDICA.getCodigo()) && BR.isValidCNPJ(objDTO.getCpfCnpj())) {
+				list.add(new FieldMessage("cpfCnpj", "Informar o cadastro de pessoa física ou jurídica!"));
+			} else {
 
-			list.add(new FieldMessage("cpfCnpj", "CNPJ inválido"));
+				if (objDTO.getTipo().equals(TipoCliente.PESSOAFISICA.getCodigo())
+						&& BR.isValidCPF(objDTO.getCpfCnpj())) {
+
+					list.add(new FieldMessage("cpfCnpj", "CPF inválido - Informar com máscara 000.000.000-00"));
+				}
+
+				if (objDTO.getTipo().equals(TipoCliente.PESSOAJURIDICA.getCodigo())
+						&& BR.isValidCNPJ(objDTO.getCpfCnpj())) {
+
+					list.add(new FieldMessage("cpfCnpj", "CNPJ inválido"));
+				}
+
+			}
 		}
 
 		Cliente cl = repo.findByEmail(objDTO.getEmail());

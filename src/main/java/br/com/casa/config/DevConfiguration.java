@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Profile;
 
 import br.com.casa.config.util.DevInstantiateDB;
 import br.com.casa.services.EmailService;
+import br.com.casa.services.MockMailService;
 import br.com.casa.services.PedidoService;
 import br.com.casa.services.SMTPMailService;
 
@@ -35,7 +36,7 @@ public class DevConfiguration {
 	@Bean
 	public EmailService getEmailService() {
 		log.info("Criando bean de e-mail");
-		return new SMTPMailService();
+		return new MockMailService();
 	}
 
 	@Bean

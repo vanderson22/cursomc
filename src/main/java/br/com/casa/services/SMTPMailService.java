@@ -11,10 +11,10 @@ import org.springframework.mail.javamail.JavaMailSender;
 
 public class SMTPMailService extends AbstractMailService {
 
-	@Autowired
+	@Autowired // PEGA AUTOMATICAMENTE TODOS OS DADOS DE E-MAIL no properties
 	private MailSender mail;
 
-	@Autowired
+	@Autowired 
 	private JavaMailSender javamail;
 
 	private static final Logger log = LoggerFactory.getLogger(SMTPMailService.class);

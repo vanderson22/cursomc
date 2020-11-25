@@ -11,7 +11,6 @@ public class ProdutoDTO implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@SuppressWarnings("unused")
 	private Integer id;
 	private String nome;
 	private Double preco;
@@ -21,9 +20,13 @@ public class ProdutoDTO implements Serializable {
 	}
 
 	public ProdutoDTO(Produto obj) {
-		  this.id = obj.getId();
-		  this.nome = obj.getNome();
-		  this.preco = obj.getPreco();
+		this.id = obj.getId();
+		this.nome = obj.getNome();
+		this.preco = obj.getPreco();
+	}
+
+	public Integer getId() {
+		return id;
 	}
 
 	public String getNome() {
